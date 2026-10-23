@@ -5,16 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0a0808">
 <title>HairOS — Inspiração · Visagismo · Você</title>
-<meta name="description" content="HairOS — inspiração capilar, cortes femininos em 3 ângulos, coloração, penteados, noivas, marcas profissionais e curadoria de produtos com links de afiliado.">
-<meta property="og:title" content="HairOS — Inspiração · Visagismo · Você">
-<meta property="og:description" content="Escolha o corte, veja frente/lado/atrás, monte o kit e mantenha o visual.">
-<meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a0808'/%3E%3Ctext x='50' y='72' font-family='Georgia,serif' font-style='italic' font-size='72' fill='%23d9bb90' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ============ TOKENS (DNA do arquivo) ============ */
   :root{
     --bg:#0a0808; --bg-card:#1a1612; --bg-elevated:#221d18;
     --text:#f5f0ea; --text-sec:#ddd0c0; --text-muted:#a89e93;
@@ -32,7 +27,6 @@
     --header-h:56px;
     --danger:#b83a4a; --danger-bg:rgba(120,25,35,.55);
     --danger-border:rgba(184,58,74,.55); --danger-text:#e8a0a8;
-    --danger-glow:rgba(184,58,74,.35);
     --glow-mid:0 0 14px rgba(217,187,144,.12);
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -43,6 +37,7 @@
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
   a{color:inherit;text-decoration:none}
   ul{list-style:none}
+  [hidden]{display:none !important}
 
   @keyframes fadeInUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   @keyframes logoZoomIn{0%{opacity:0;transform:scale(.1)}100%{opacity:1;transform:scale(1)}}
@@ -50,16 +45,11 @@
   @keyframes fadeSection{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
   @keyframes heartPop{0%{transform:scale(1)}35%{transform:scale(1.22)}100%{transform:scale(1)}}
   @keyframes softGlowGold{0%,100%{text-shadow:0 0 4px rgba(237,212,172,.45),0 0 10px rgba(206,175,132,.25)}50%{text-shadow:0 0 8px rgba(237,212,172,.75),0 0 18px rgba(206,175,132,.4)}}
-  @keyframes modalImgIn{from{opacity:0;transform:scale(.97) translateY(8px)}to{opacity:1;transform:none}}
-  @keyframes sheetIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-  @keyframes drawerItemIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
-  @keyframes cardOrbita{0%{--orbita:0deg;opacity:0}14%{opacity:1}86%{opacity:1}100%{--orbita:360deg;opacity:0}}
 
-  /* ============ LOADING ============ */
-  .loading-screen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.2s cubic-bezier(.4,0,.2,1),visibility 1.2s}
+  .loading-screen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease,visibility .9s}
   .loading-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .loading-logo{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:700;font-style:italic;display:flex;align-items:center;gap:4px;animation:logoZoomIn 1.2s var(--ease-luxury) forwards}
-  .loading-logo.zoom-out{animation:logoZoomOut .8s cubic-bezier(.77,0,.175,1) forwards}
+  .loading-logo{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:700;font-style:italic;display:flex;align-items:center;gap:4px;animation:logoZoomIn 1s var(--ease-luxury) forwards}
+  .loading-logo.zoom-out{animation:logoZoomOut .7s cubic-bezier(.77,0,.175,1) forwards}
   .loading-logo span{color:var(--gold);text-shadow:0 0 60px var(--gold-glow)}
   .loading-logo .dot{color:var(--gold);font-size:3rem}
   .loading-bar{margin-top:28px;width:min(210px,64vw);height:3px;background:var(--border);border-radius:2px;overflow:hidden}
@@ -67,25 +57,13 @@
   .loading-text{margin-top:16px;font-size:.7rem;color:var(--text-muted);letter-spacing:.15em;text-transform:uppercase;font-weight:300;opacity:.4}
   .loading-percent{margin-top:6px;font-size:.65rem;color:var(--gold);opacity:.6}
 
-  .main-content{opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out),visibility .6s}
+  .main-content{opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .5s var(--ease-out),transform .5s var(--ease-out),visibility .5s}
   .main-content.visible{opacity:1;visibility:visible;transform:translateY(0)}
 
-  /* ============ TOPBAR ============ */
-  .topbar{
-    position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:0;right:0;margin-inline:auto;
-    width:min(calc(100% - 28px),760px);height:var(--header-h);
-    background:rgba(26,22,18,.66);
-    backdrop-filter:blur(22px) saturate(170%);
-    -webkit-backdrop-filter:blur(22px) saturate(170%);
-    border:1px solid var(--border-gold);border-radius:999px;
-    z-index:900;display:flex;align-items:center;
-    box-shadow:0 12px 32px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,240,210,.06);
-    opacity:0;transform:translateY(-16px);
-    transition:transform .55s var(--ease-out),opacity .4s var(--ease-soft);
-  }
+  .topbar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:0;right:0;margin-inline:auto;width:min(calc(100% - 28px),760px);height:var(--header-h);background:rgba(26,22,18,.66);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid var(--border-gold);border-radius:999px;z-index:900;display:flex;align-items:center;box-shadow:0 12px 32px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,240,210,.06);opacity:0;transform:translateY(-16px);transition:transform .55s var(--ease-out),opacity .4s var(--ease-soft)}
   .topbar-inner{width:100%;padding:0 8px 0 22px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;align-items:baseline;gap:2px;text-decoration:none;line-height:1;cursor:pointer;user-select:none;background:none;border:none;color:inherit;font-family:inherit;padding:0;flex-shrink:0}
-  .brand-h{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;font-style:italic;color:var(--gold);line-height:1;letter-spacing:-.03em;text-shadow:0 0 8px rgba(237,212,172,.4),0 0 18px rgba(206,175,132,.2)}
+  .brand{display:flex;align-items:baseline;gap:2px;line-height:1;background:none;border:none;color:inherit;font-family:inherit;padding:0;flex-shrink:0;cursor:pointer}
+  .brand-h{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;font-style:italic;color:var(--gold);line-height:1;letter-spacing:-.03em;text-shadow:0 0 8px rgba(237,212,172,.4)}
   .brand-rest{font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;color:var(--text-sec);line-height:1;letter-spacing:.01em}
   .top-nav{display:none;gap:22px;margin-left:20px;flex:1}
   .top-nav a{font-size:13px;font-weight:500;color:var(--text-muted);padding:6px 0;position:relative;transition:color .2s}
@@ -111,7 +89,6 @@
   .menu-btn .bar{display:block;width:16px;height:1.5px;background:currentColor;border-radius:2px;transition:var(--tr-ui)}
   .menu-btn .bar + .bar{margin-top:3.5px}
 
-  /* ============ DRAWER ============ */
   .drawer-overlay{position:fixed;inset:0;background:rgba(10,8,8,.7);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:950;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s}
   .drawer-overlay.ativo{opacity:1;visibility:visible}
   .drawer{position:fixed;top:0;right:0;bottom:0;width:min(320px,84vw);background:var(--bg-card);border-left:1px solid var(--border-gold);z-index:960;transform:translateX(100%);transition:transform .45s var(--ease-luxury);display:flex;flex-direction:column;padding:24px 0;overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;box-shadow:-18px 0 44px rgba(0,0,0,.5)}
@@ -121,26 +98,22 @@
   .drawer-brand{display:flex;align-items:baseline;gap:2px;line-height:1}
   .drawer-brand .brand-h{font-size:1.5rem}
   .drawer-brand .brand-rest{font-size:.92rem}
-  .drawer-fechar{width:36px;height:36px;border-radius:50%;background:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger-text);cursor:pointer;font-size:1.1rem;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;transition:var(--tr-ui);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .drawer-fechar{width:36px;height:36px;border-radius:50%;background:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger-text);cursor:pointer;font-size:1.1rem;line-height:1;display:flex;align-items:center;justify-content:center;padding:0;transition:var(--tr-ui)}
   .drawer-fechar:hover{background:rgba(150,35,48,.75);border-color:var(--danger);color:#f5c8ce}
   .drawer-nav{display:flex;flex-direction:column;padding:16px 0}
-  .drawer-nav button{display:block;width:100%;text-align:left;padding:16px 24px;background:none;border:none;color:var(--text);font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;font-weight:500;letter-spacing:.005em;border-bottom:1px solid var(--border);transition:var(--tr-ui),padding-left .3s var(--ease-out);cursor:pointer}
+  .drawer-nav button{display:block;width:100%;text-align:left;padding:16px 24px;background:none;border:none;color:var(--text);font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;font-weight:500;border-bottom:1px solid var(--border);transition:var(--tr-ui),padding-left .3s var(--ease-out);cursor:pointer}
   .drawer-nav button:last-child{border-bottom:none}
   .drawer-nav button:hover{background:rgba(217,187,144,.05);color:var(--gold);padding-left:30px}
   .drawer-nav button.ativo{color:var(--gold)}
   .drawer-footer{margin-top:auto;padding:24px;font-size:.62rem;color:var(--text-muted);letter-spacing:.25em;text-transform:uppercase;font-weight:300;opacity:.5;text-align:center}
 
-  /* ============ SEÇÕES ============ */
-  .secao{display:none;animation:fadeSection .4s var(--ease-out)}
-  .secao.ativa{display:block}
-
+  .view{animation:fadeSection .4s var(--ease-out)}
   .page-title{text-align:center;padding:calc(var(--nav-space) + 8px) 16px 8px;margin-bottom:24px}
   .page-title h1{font-family:'Playfair Display',serif;font-style:italic;font-size:1.6rem;font-weight:600;color:var(--text);letter-spacing:-.015em;line-height:1.2}
   .page-title .divider{display:block;width:20px;height:1px;margin:18px auto 14px;background:var(--border-gold)}
   .page-title .sub{display:block;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted);font-weight:300;line-height:1.9}
   .page-title .sub .highlight{color:var(--gold);font-weight:400}
 
-  /* ============ HOME HERO ============ */
   .hero{padding:calc(var(--nav-space) + 6px) 0 30px;text-align:center}
   .hero-eyebrow{font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:16px;display:block}
   .hero-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.8rem,6vw,2.6rem);font-weight:600;line-height:1.15;letter-spacing:-.02em;margin-bottom:14px;color:var(--text)}
@@ -152,10 +125,7 @@
   .btn-primary:hover{box-shadow:0 0 18px rgba(237,212,172,.35)}
   .btn-outline{background:transparent;color:var(--gold-light);border-color:var(--border-gold)}
   .btn-outline:hover{background:rgba(217,187,144,.08);border-color:var(--gold)}
-  .btn-dark{background:var(--bg-elevated);color:var(--gold-light);border-color:var(--border-gold)}
-  .btn-dark:hover{background:#2b241d}
 
-  /* ============ HERO MEDIA (imagem grande) ============ */
   .hero-media-wrap{position:relative;margin:0 0 36px;border-radius:20px;overflow:hidden;aspect-ratio:4/5;max-height:560px;border:1px solid var(--border-gold);box-shadow:0 0 20px rgba(217,187,144,.08),0 18px 44px rgba(0,0,0,.5)}
   .hero-media-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 30%}
   .hero-media-wrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,8,0) 40%,rgba(10,8,8,.9) 100%);pointer-events:none}
@@ -163,7 +133,6 @@
   .hero-media-label .eyebrow{font-size:.6rem;letter-spacing:.26em;color:var(--gold);font-weight:500;margin-bottom:8px;display:block}
   .hero-media-label h2{font-family:'Playfair Display',serif;font-style:italic;font-size:1.5rem;font-weight:600;line-height:1.2;color:#fff}
 
-  /* ============ BENEFÍCIOS ============ */
   .benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:36px}
   @media(min-width:768px){.benefits{grid-template-columns:repeat(4,1fr)}}
   .benefit{padding:14px 12px;border-radius:12px;background:var(--bg-card);border:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
@@ -171,7 +140,6 @@
   .benefit b{display:block;font-size:.78rem;font-weight:600;color:var(--gold-light);line-height:1.25;margin-bottom:3px}
   .benefit span{font-size:.68rem;color:var(--text-muted);line-height:1.4;display:block}
 
-  /* ============ SECTION HEAD ============ */
   .section{padding:4px 0 40px}
   .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
   .section-head h2{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.3rem,4.5vw,1.7rem);font-weight:600;color:var(--text);letter-spacing:-.01em;line-height:1.15}
@@ -179,10 +147,7 @@
   .section-head .eyebrow{font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:500;display:block;margin-bottom:8px}
   .link-more{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);transition:color .2s;padding:8px 0;flex-shrink:0}
   .link-more:hover{color:var(--gold-light)}
-  .link-more svg{transition:transform .2s}
-  .link-more:hover svg{transform:translateX(3px)}
 
-  /* ============ GRID CATEDORIAS ============ */
   .grid-cat{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   @media(min-width:600px){.grid-cat{grid-template-columns:repeat(3,1fr)}}
   @media(min-width:900px){.grid-cat{grid-template-columns:repeat(4,1fr);gap:16px}}
@@ -196,14 +161,12 @@
   .cat-card-body p{font-size:.7rem;color:rgba(255,255,255,.72);line-height:1.35;font-weight:300}
   .cat-card-body .arrow{display:inline-flex;align-items:center;gap:5px;margin-top:8px;font-size:.62rem;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase}
 
-  /* ============ BRANDS ============ */
   .grid-brand{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
   @media(min-width:600px){.grid-brand{grid-template-columns:repeat(3,1fr)}}
   @media(min-width:900px){.grid-brand{grid-template-columns:repeat(4,1fr);gap:14px}}
   .brand-card{display:flex;align-items:center;justify-content:center;padding:22px 12px;border-radius:12px;background:var(--bg-card);border:1px solid var(--border);font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;font-weight:600;color:var(--text);letter-spacing:.02em;text-align:center;transition:var(--tr-ui);min-height:82px}
   .brand-card:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);box-shadow:0 0 14px rgba(217,187,144,.14)}
 
-  /* ============ RECOMMEND ============ */
   .grid-rec{display:grid;grid-template-columns:1fr;gap:12px}
   @media(min-width:600px){.grid-rec{grid-template-columns:repeat(2,1fr)}}
   @media(min-width:900px){.grid-rec{grid-template-columns:repeat(3,1fr);gap:16px}}
@@ -215,7 +178,6 @@
   .rec-card-body h3{font-family:'Playfair Display',serif;font-style:italic;font-size:.98rem;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:4px}
   .rec-card-body p{font-size:.72rem;color:var(--text-muted);line-height:1.4;font-weight:300}
 
-  /* ============ CHIPS ============ */
   .chips-carousel{position:relative;margin:0 -14px 18px;padding-top:calc(var(--nav-space) + 4px);padding-bottom:8px}
   .chips-carousel::before,.chips-carousel::after{content:"";position:absolute;top:var(--nav-space);bottom:8px;width:24px;pointer-events:none;z-index:2}
   .chips-carousel::before{left:0;background:linear-gradient(90deg,var(--bg) 30%,transparent)}
@@ -229,21 +191,22 @@
   .chip[aria-pressed="true"]{color:#1b1209;border-color:transparent;box-shadow:0 0 14px rgba(217,187,144,.28)}
   .chip[aria-pressed="true"]::before{opacity:1;transform:none}
 
-  /* ============ MASONRY ============ */
   #catalogo{column-count:2;column-gap:12px}
   @media(min-width:600px){#catalogo{column-count:3;column-gap:14px}}
   @media(min-width:900px){#catalogo{column-count:4;column-gap:16px}}
   @media(min-width:1200px){#catalogo{column-count:5;column-gap:18px}}
   .card{break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;margin-bottom:14px;position:relative;display:block;width:100%;cursor:pointer;padding:1.5px;background:var(--gold-grad);border-radius:calc(var(--radius) + 1.5px);box-shadow:0 0 10px rgba(217,187,144,.08);transition:transform .5s var(--ease-out),box-shadow .5s var(--ease-out),opacity .3s var(--ease-out);-webkit-tap-highlight-color:transparent;animation:fadeInUp .55s var(--ease-out) backwards}
-  .card:focus-visible{outline:2px solid rgba(253,241,212,.7);outline-offset:4px;box-shadow:0 0 14px rgba(217,187,144,.18)}
+  .card:focus-visible{outline:2px solid rgba(253,241,212,.7);outline-offset:4px}
   .card .card-inner{border-radius:var(--radius);overflow:hidden;background:var(--bg-card);display:block;position:relative}
   @property --orbita{syntax:"<angle>";inherits:false;initial-value:0deg}
   .card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:conic-gradient(from var(--orbita) at 50% 50%,transparent 0deg,transparent 262deg,rgba(237,212,172,.30) 300deg,rgba(253,241,212,.70) 328deg,#fffaf0 342deg,transparent 360deg)}
   .card.shine::before{animation:cardOrbita 2.6s var(--ease-soft) 1 both}
+  @keyframes cardOrbita{0%{--orbita:0deg;opacity:0}14%{opacity:1}86%{opacity:1}100%{--orbita:360deg;opacity:0}}
   .card.shine{box-shadow:0 0 14px rgba(253,241,212,.16),0 0 30px rgba(217,187,144,.08)}
   .card img{width:100%;display:block;object-fit:cover;object-position:center top;background:var(--bg-elevated);opacity:0;transition:opacity .7s var(--ease-out),transform .8s var(--ease-out)}
   .card .h-xs{height:150px}.card .h-sm{height:200px}.card .h-md{height:260px}.card .h-lg{height:320px}.card .h-xl{height:380px}.card .h-xxl{height:440px}
   @media(min-width:600px){.card .h-xs{height:170px}.card .h-sm{height:230px}.card .h-md{height:300px}.card .h-lg{height:370px}.card .h-xl{height:440px}.card .h-xxl{height:520px}}
+  .card img.carregada{opacity:1}
   .card-label{position:absolute;bottom:12px;left:50%;transform:translateX(-50%) translateY(10px);background:rgba(10,8,8,.85);border:1px solid var(--border-gold);padding:6px 16px;border-radius:24px;white-space:nowrap;opacity:0;transition:var(--tr-ui);font-family:'Playfair Display',serif;font-style:italic;font-size:.78rem;font-weight:600;letter-spacing:.02em;pointer-events:none;color:var(--text);max-width:90%;overflow:hidden;text-overflow:ellipsis}
   .card-label .angle{color:var(--gold);font-family:'Inter',sans-serif;font-style:normal;font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;margin-left:8px;opacity:.85}
   .card-actions{position:absolute;top:10px;right:10px;z-index:5;display:flex;flex-direction:column;gap:8px;opacity:0;transform:translateY(-6px);transition:opacity .3s var(--ease-luxury),transform .3s var(--ease-luxury);pointer-events:none}
@@ -267,31 +230,12 @@
     .card.touch-ativo .card-actions{opacity:1;transform:translateY(0);pointer-events:auto}
     .card-action{width:32px;height:32px;background:rgba(10,8,8,.72)}
     .card-action svg{width:14px;height:14px}
-    .card:not(.touch-ativo) .card-actions{opacity:0 !important;pointer-events:none !important}
   }
 
-  /* ============ LISTAS (14 afiliados) ============ */
-  .listas-lista{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-  .accordion-item{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .3s,box-shadow .3s}
-  .accordion-item:hover{border-color:var(--border-gold);box-shadow:0 0 15px rgba(217,187,144,.05)}
-  .accordion-item.aberto{border-color:rgba(217,187,144,.45);box-shadow:0 0 18px rgba(217,187,144,.08)}
-  .accordion-header{width:100%;border:0;font:inherit;text-align:left;color:inherit;display:flex;justify-content:space-between;align-items:center;padding:20px 22px;cursor:pointer;background:var(--bg-card);transition:background-color .3s}
-  .accordion-header:hover{background:rgba(217,187,144,.03)}
-  .accordion-header:focus-visible{box-shadow:inset 0 0 0 2px rgba(217,187,144,.5)}
-  .accordion-item.aberto .accordion-title{color:var(--gold-light)}
-  .accordion-title{font-family:'Playfair Display',serif;font-style:italic;font-size:1.15rem;font-weight:600;letter-spacing:.3px;color:var(--text)}
-  .accordion-icon{font-size:1.4rem;color:var(--gold);font-weight:300;transition:transform .4s ease;line-height:1}
-  .accordion-header.active .accordion-icon{transform:rotate(45deg)}
-  .accordion-content{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1);background:rgba(10,8,8,.3);border-top:1px solid transparent}
-  .accordion-header.active + .accordion-content{border-top:1px solid var(--border)}
-  .accordion-content-inner{padding:22px}
-  .category-desc{margin-bottom:18px;color:var(--text-muted);font-size:.86rem;font-weight:300;line-height:1.6}
-
-  /* kit produto card (mini) */
   .kit-produtos-grid{display:grid;grid-template-columns:1fr;gap:10px}
   @media(min-width:600px){.kit-produtos-grid{grid-template-columns:repeat(2,1fr)}}
   @media(min-width:900px){.kit-produtos-grid{grid-template-columns:repeat(3,1fr)}}
-  .kit-produto-card{display:flex;align-items:center;gap:12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:10px;text-decoration:none;transition:transform .3s,border-color .3s,box-shadow .3s;-webkit-tap-highlight-color:transparent;cursor:pointer}
+  .kit-produto-card{display:flex;align-items:center;gap:12px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:10px;text-decoration:none;transition:transform .3s,border-color .3s,box-shadow .3s;-webkit-tap-highlight-color:transparent;cursor:pointer;color:inherit}
   @media(hover:hover){.kit-produto-card:hover{transform:translateY(-3px);border-color:var(--gold);box-shadow:0 8px 20px rgba(0,0,0,.4);background:rgba(217,187,144,.03)}}
   .kit-produto-card:active{border-color:var(--gold);background:rgba(217,187,144,.05)}
   .kit-produto-img{width:58px;height:58px;flex-shrink:0;border-radius:8px;background-color:var(--bg-elevated);background-size:cover;background-position:center top;background-repeat:no-repeat;border:1px solid var(--border-gold)}
@@ -300,23 +244,20 @@
   .kit-produto-nome{font-size:.82rem;font-weight:500;color:var(--gold-light);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .kit-produto-razao{font-size:.68rem;color:var(--text-muted);font-weight:300;line-height:1.4}
   .kit-produto-cta{display:flex;align-items:center;justify-content:center;width:30px;height:30px;flex-shrink:0;border-radius:50%;background:var(--gold-grad);color:#1a1208;font-size:.95rem;font-weight:700;transition:transform .2s;pointer-events:none}
-  .kit-produto-card:hover .kit-produto-cta{transform:scale(1.1)}
 
-  /* ============ SOBRE / CONTATO ============ */
   .sobre-conteudo{max-width:640px;margin:0 auto;text-align:center;padding:0 12px}
   .sobre-conteudo .sobre-marca{font-family:'Playfair Display',serif;font-style:italic;font-size:3rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:8px;animation:softGlowGold 5s ease-in-out infinite}
   .sobre-conteudo .sobre-tag{font-size:.66rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text-muted);font-weight:300;margin-bottom:28px;display:block}
   .sobre-conteudo p{font-size:.9rem;color:var(--text-sec);font-weight:300;line-height:1.8;margin-bottom:18px;text-align:left}
   .sobre-conteudo p .gold{color:var(--gold);font-weight:400}
   .sobre-fio{display:block;width:32px;height:1px;background:var(--border-gold);margin:28px auto}
+  .sobre-conteudo ul{color:var(--text-muted);font-size:.88rem;line-height:1.8;padding-left:20px;list-style:disc;max-width:560px;margin:0 auto;text-align:left}
 
   .contato-conteudo{max-width:640px;margin:0 auto;padding:0 12px}
   .contato-intro{margin-bottom:24px}
   .contato-intro p{font-size:.9rem;color:var(--text-sec);font-weight:300;line-height:1.7;margin-bottom:10px}
   .contato-email-inline{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-muted);margin-top:4px}
   .contato-email-inline span{color:var(--gold);opacity:.75}
-  .contato-form-section{margin-bottom:26px}
-  .contato-form-eyebrow{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px}
   .contato-form{display:flex;flex-direction:column;gap:12px}
   .contato-form-row{display:grid;grid-template-columns:1fr;gap:12px}
   @media(min-width:480px){.contato-form-row{grid-template-columns:1fr 1fr}}
@@ -326,29 +267,37 @@
   .contato-form input:focus,.contato-form textarea:focus{border-color:var(--gold);box-shadow:var(--focus-ring);background:var(--bg-elevated)}
   .contato-form textarea{min-height:120px;resize:vertical}
   .contato-form button[type="submit"]{background:var(--gold-grad);border:none;border-radius:10px;padding:14px;color:#1b1209;font-size:.82rem;font-weight:700;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;margin-top:4px;transition:var(--tr-ui);font-family:inherit}
-  .contato-form button[type="submit"]:hover{outline:var(--focus-ring)}
   .contato-form button[type="submit"]:disabled{opacity:.6;cursor:not-allowed}
+
   .pending-badge{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;color:#e8a96b;background:rgba(160,90,25,.25);border:1px solid rgba(200,130,60,.4);padding:9px 14px;border-radius:10px;font-weight:500}
 
-  /* ============ MODAL ============ */
-  .modal{position:fixed;inset:0;display:block;padding:0;--stage-pad:calc(var(--header-h) + 12px + env(safe-area-inset-top,0px));background:#0a0808;z-index:1000;opacity:0;visibility:hidden;transition:opacity .4s ease,visibility .4s;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;overflow-anchor:none}
+  .list-hero{border:1px solid var(--border-gold);border-radius:14px;overflow:hidden;margin:0 0 26px;background:var(--bg-card)}
+  .list-hero-media{aspect-ratio:16/9;overflow:hidden;background:var(--bg-elevated)}
+  .list-hero-media img{width:100%;height:100%;object-fit:cover}
+  .list-hero-body{padding:22px}
+  .list-hero-body .eyebrow{font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .list-hero-body h2{font-family:'Playfair Display',serif;font-style:italic;font-size:1.4rem;color:var(--text);margin:8px 0;line-height:1.2}
+  .list-hero-body p{font-size:.82rem;color:var(--text-muted);font-weight:300;line-height:1.6;margin-bottom:16px}
+  .list-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .list-meta span{font-size:.65rem;padding:5px 10px;border-radius:12px;background:rgba(217,187,144,.14);color:var(--gold);font-weight:500}
+
+  .modal{position:fixed;inset:0;padding:0;--stage-pad:calc(var(--header-h) + 12px + env(safe-area-inset-top,0px));background:#0a0808;z-index:1000;opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .modal.ativo{opacity:1;visibility:visible}
   .modal::-webkit-scrollbar{width:0;height:0;display:none}
   .modal{scrollbar-width:none;-ms-overflow-style:none}
-  .modal-stage{position:sticky;top:0;z-index:1;width:100%;height:calc(var(--stage-pad) + min(62vh,560px) + 32px);padding:var(--stage-pad) 0 32px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;touch-action:pan-y;overflow:hidden;transform-origin:center top;will-change:transform,opacity}
-  .modal-stage img{width:auto;height:min(62vh,560px);max-width:84vw;aspect-ratio:3/4;object-fit:cover;object-position:center center;border-radius:14px;box-shadow:0 0 18px rgba(217,187,144,.14),0 0 40px rgba(0,0,0,.65);transition:opacity .35s var(--ease-luxury),transform .35s var(--ease-luxury),border-radius .35s var(--ease-luxury),box-shadow .35s var(--ease-luxury);will-change:opacity,transform;cursor:zoom-in;-webkit-user-drag:none;transform-origin:center center}
-  .modal-stage img.zoom{cursor:grab;border-radius:0;box-shadow:none;transition:transform .45s var(--ease-out),border-radius .45s var(--ease-out),box-shadow .45s var(--ease-out);max-width:none;max-height:none}
+  .modal-stage{position:sticky;top:0;z-index:1;width:100%;height:calc(var(--stage-pad) + min(62vh,560px) + 32px);padding:var(--stage-pad) 0 32px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;touch-action:pan-y;overflow:hidden}
+  .modal-stage img{width:auto;height:min(62vh,560px);max-width:84vw;aspect-ratio:3/4;object-fit:cover;object-position:center center;border-radius:14px;box-shadow:0 0 18px rgba(217,187,144,.14),0 0 40px rgba(0,0,0,.65);transition:opacity .35s,transform .35s,border-radius .35s,box-shadow .35s;cursor:zoom-in;-webkit-user-drag:none;transform-origin:center center}
+  .modal-stage img.zoom{cursor:grab;border-radius:0;box-shadow:none;max-width:none;max-height:none}
   .modal-stage img.zoom.arrastando{cursor:grabbing;transition:none}
   .modal-stage.zoom-ativo{touch-action:none}
-  .btn-circ{width:44px;height:44px;border-radius:50%;background:rgba(10,8,8,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--border-gold);color:var(--gold-light);cursor:pointer;line-height:1;user-select:none;display:flex;align-items:center;justify-content:center;padding:0;transition:opacity .3s ease,background .3s var(--ease-luxury),transform .3s var(--ease-luxury),border-color .3s var(--ease-luxury),box-shadow .3s var(--ease-luxury);font-family:'Inter',sans-serif;font-weight:300;font-size:1.4rem;box-shadow:0 0 10px rgba(217,187,144,.08)}
-  .btn-circ:hover{background:var(--gold);color:#1b1209;border-color:transparent;box-shadow:0 0 14px rgba(253,241,212,.28),0 0 24px rgba(217,187,144,.14)}
+  .btn-circ{width:44px;height:44px;border-radius:50%;background:rgba(10,8,8,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--border-gold);color:var(--gold-light);cursor:pointer;line-height:1;user-select:none;display:flex;align-items:center;justify-content:center;padding:0;transition:var(--tr-ui);font-family:'Inter',sans-serif;font-weight:300;font-size:1.4rem}
+  .btn-circ:hover{background:var(--gold);color:#1b1209;border-color:transparent}
   .btn-circ svg{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-  .modal-fechar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);right:20px;background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger-text);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(184,58,74,.12),0 4px 20px rgba(0,0,0,.4);z-index:20;font-size:1.1rem}
-  .modal-fechar:hover{background:rgba(150,35,48,.75);border-color:var(--danger);color:#f5c8ce;transform:scale(1.08) rotate(90deg)}
-  .modal-acoes{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:20px;z-index:20;display:flex;gap:8px;transition:opacity .3s ease}
+  .modal-fechar{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);right:20px;background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger-text);z-index:20;font-size:1.1rem}
+  .modal-acoes{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:20px;z-index:20;display:flex;gap:8px}
   .modal-acao{width:44px;height:44px;border-radius:50%;background:rgba(10,8,8,.8);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--border-gold);color:var(--gold-light);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;line-height:1;transition:var(--tr-ui);font-family:inherit}
   .modal-acao svg{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-  .modal-acao:hover{background:var(--gold);color:#1b1209;border-color:transparent;box-shadow:0 0 14px rgba(253,241,212,.28)}
+  .modal-acao:hover{background:var(--gold);color:#1b1209;border-color:transparent}
   .modal-acao.fav.on{color:var(--danger);border-color:rgba(184,58,74,.55);background:rgba(120,25,35,.55)}
   .modal-acao.fav.on svg{fill:var(--danger);stroke:var(--danger)}
   .modal-acao.fav.pop{animation:heartPop .45s ease}
@@ -356,28 +305,21 @@
   .modal-nav.prev{left:4px}.modal-nav.next{right:4px}
   @media(min-width:700px){.modal-nav.prev{left:16px}.modal-nav.next{right:16px}}
   .modal-info{--raio:26px;transition:border-radius .28s var(--ease-out);position:relative;z-index:2;width:100%;min-height:100%;margin-top:-24px;box-sizing:border-box;padding:14px max(20px,calc((100% - 560px) / 2)) calc(env(safe-area-inset-bottom,0px) + 80px);text-align:center;background:#120f0c;border-radius:var(--raio) var(--raio) 0 0;border-top:1px solid var(--border-gold);box-shadow:0 -18px 40px rgba(0,0,0,.55)}
-  .modal-info.topo{--raio:0px}
-  .modal-info::before{transition:opacity .2s ease;content:"";display:block;width:38px;height:4px;border-radius:4px;background:rgba(217,187,144,.35);margin:0 auto 18px}
-  .modal-info.topo::before{opacity:0}
+  .modal-info::before{content:"";display:block;width:38px;height:4px;border-radius:4px;background:rgba(217,187,144,.35);margin:0 auto 18px}
   .modal-titulo{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:1.2rem;color:var(--text);letter-spacing:-.01em}
   .modal-titulo .angle{color:var(--gold);font-family:'Inter',sans-serif;font-style:normal;font-size:.62rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;margin-left:10px}
   .modal-desc{margin-top:6px;font-size:.82rem;color:var(--text-sec);font-weight:300;line-height:1.6}
   .modal-thumbs{margin-top:14px;display:flex;justify-content:center;gap:10px}
   .thumb{width:54px;height:72px;aspect-ratio:3/4;padding:0;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--bg-elevated);cursor:pointer;opacity:.55;transition:var(--tr-ui);position:relative}
   .thumb img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
-  .thumb:hover{opacity:.9}
-  .thumb[aria-current="true"]{opacity:1;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 0 12px rgba(217,187,144,.18)}
+  .thumb[aria-current="true"]{opacity:1;border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
   .modal-kit{margin-top:22px;padding-top:20px;border-top:1px solid var(--border)}
-  .modal-kit-titulo{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:1rem;color:var(--text);margin-bottom:16px;letter-spacing:-.005em}
-  .modal-kit-titulo::after{content:'';display:block;width:20px;height:1px;margin:10px auto 0;background:var(--border-gold)}
-  .modal-kit-lista{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+  .modal-kit-titulo{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:1rem;color:var(--text);margin-bottom:16px}
+  .modal-kit-lista{display:flex;flex-direction:column;gap:8px;margin-top:16px;text-align:left}
   .modal-aviso{margin-top:14px;font-size:.65rem;color:var(--text-muted);font-weight:300;line-height:1.5;opacity:.8}
-  .modal-cta{margin-top:20px;padding-top:18px;border-top:1px solid var(--border);font-family:'Playfair Display',serif;font-style:italic;font-size:.82rem;color:var(--text-sec);font-weight:400}
+  .modal-cta{margin-top:20px;padding-top:18px;border-top:1px solid var(--border);font-family:'Playfair Display',serif;font-style:italic;font-size:.82rem;color:var(--text-sec)}
   .modal-cta .gold{color:var(--gold)}
-  .modal-kit-grid{display:flex;flex-direction:column;gap:8px;text-align:left}
-  [hidden]{display:none !important}
 
-  /* ============ DOCK ============ */
   .dock{position:fixed;left:0;right:0;margin-inline:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);width:min(calc(100% - 28px),420px);display:grid;grid-template-columns:repeat(5,1fr);padding:6px;border-radius:999px;--i:0;background:rgba(26,22,18,.66);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);border:1px solid var(--border-gold);box-shadow:0 12px 32px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,240,210,.06);z-index:900;opacity:0;transform:translateY(16px);transition:transform .55s var(--ease-out),opacity .4s var(--ease-soft)}
   .dock-ind{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px) / 5);border-radius:999px;background:rgba(217,187,144,.13);border:1px solid rgba(217,187,144,.22);transform:translateX(calc(var(--i) * 100%));transition:transform .55s var(--ease-out);pointer-events:none}
   .dock-btn{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:52px;padding:0;border:none;border-radius:999px;background:none;color:var(--text-muted);cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:color .3s var(--ease-out),transform .2s var(--ease-out)}
@@ -393,10 +335,9 @@
   body.app-pronta.nav-escondida .topbar{opacity:0;transform:translateY(calc(-100% - 28px - env(safe-area-inset-top,0px)));pointer-events:none}
   body.app-pronta.nav-escondida .dock{opacity:0;transform:translateY(calc(100% + 32px + env(safe-area-inset-bottom,0px)));pointer-events:none}
 
-  /* ============ SEARCH OVERLAY ============ */
   .search-results{position:fixed;top:calc(var(--header-h) + 24px + env(safe-area-inset-top,0px));left:14px;right:14px;background:var(--bg-card);border:1px solid var(--border-gold);border-radius:14px;box-shadow:0 20px 48px rgba(0,0,0,.7);z-index:55;display:none;overflow-y:auto;max-height:70vh;padding:8px}
-  .search-results.open{display:block;animation:fadeSection .2s}
-  @media(min-width:900px){.search-results{left:auto;right:auto;width:380px;top:calc(var(--header-h) + 24px);margin-left:auto;margin-right:calc((100% - 760px) / 2 + 20px)}}
+  .search-results.open{display:block}
+  @media(min-width:900px){.search-results{left:auto;right:auto;width:380px;margin-left:auto;margin-right:calc((100% - 760px) / 2 + 20px)}}
   .search-group-title{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;padding:10px 12px 6px}
   .search-result{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;width:100%;text-align:left;transition:background .15s;background:none;border:none;cursor:pointer;font-family:inherit;color:inherit;text-decoration:none}
   .search-result:hover{background:rgba(217,187,144,.06)}
@@ -406,25 +347,27 @@
   .search-result .sr-sub{font-size:.68rem;color:var(--text-muted);margin-top:1px}
   .search-empty{text-align:center;padding:32px 20px;color:var(--text-muted);font-size:.82rem}
 
-  /* ============ FOOTER ============ */
   .footer-mini{text-align:center;margin-top:56px;padding-top:28px;border-top:1px solid var(--border);font-size:.6rem;color:var(--text-muted);letter-spacing:.3em;text-transform:uppercase;font-weight:300;opacity:.5;padding-bottom:20px}
   .footer-mini .gold{color:var(--gold);opacity:1}
   .footer-links{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:16px}
   .footer-links a{font-size:.68rem;color:var(--text-muted);letter-spacing:.05em;transition:color .2s}
   .footer-links a:hover{color:var(--gold)}
 
-  /* ============ UTIL ============ */
-  .hidden{display:none !important}
-  .mt-16{margin-top:16px}
-  .mt-24{margin-top:24px}
-  .center{text-align:center}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+  .empty-state .icon{font-size:2rem;opacity:.4;margin-bottom:10px}
+  .empty-state .title{font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--text-sec);margin-bottom:6px}
+  .empty-state .sub{font-size:.8rem;opacity:.7;margin-bottom:20px}
+
+  .toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%) translateY(20px);background:rgba(10,8,8,.95);backdrop-filter:blur(12px);border:1px solid rgba(217,187,144,.4);color:#edd4ac;padding:11px 22px;border-radius:30px;font:500 .8rem 'Inter',sans-serif;letter-spacing:.02em;opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.23,1,.32,1);z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6);white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}}
 </style>
 </head>
 <body>
 
 <!-- LOADING -->
-<div class="loading-screen" id="loadingScreen" role="status" aria-live="polite" aria-label="Carregando HairOS">
+<div class="loading-screen" id="loadingScreen" role="status" aria-live="polite">
   <div class="loading-logo" id="loadingLogo">Hair<span>OS</span><span class="dot">.</span></div>
   <div class="loading-bar" id="loadingBarContainer" aria-hidden="true"><div class="loading-bar-inner" id="loadingBar"></div></div>
   <div class="loading-text" id="loadingText">preparando elegância</div>
@@ -482,7 +425,7 @@
     </span>
     <button type="button" class="drawer-fechar" id="drawerFechar" aria-label="Fechar menu">&times;</button>
   </div>
-  <nav class="drawer-nav">
+  <nav class="drawer-nav" id="drawerNav">
     <button type="button" data-route="#/">Início</button>
     <button type="button" data-route="#/categorias">Categorias</button>
     <button type="button" data-route="#/cortes">Cortes</button>
@@ -536,7 +479,7 @@
 <!-- MODAL -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitulo" aria-hidden="true">
   <button type="button" class="btn-circ modal-fechar" id="fecharModal" aria-label="Fechar">&times;</button>
-  <div class="modal-acoes" id="modalAcoes">
+  <div class="modal-acoes">
     <button type="button" class="modal-acao fav" id="modalFav" aria-label="Favoritar" aria-pressed="false">
       <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.7 5 6.1 5c2.1 0 3.6 1.2 4.4 2.5h3C14.3 6.2 15.8 5 17.9 5c3.4 0 5.2 3.4 3.7 6.8C19.5 16.4 12 21 12 21z"/></svg>
     </button>
@@ -555,1349 +498,1212 @@
     <div class="modal-thumbs" id="modalThumbs"></div>
     <div class="modal-kit" id="modalKit" hidden>
       <div class="modal-kit-titulo">Kit para manter esse visual em casa</div>
-      <div class="modal-kit-lista modal-kit-grid" id="modalKitLista"></div>
+      <div class="modal-kit-lista" id="modalKitLista"></div>
       <p class="modal-aviso">Links de afiliado: se você comprar por eles, posso receber uma comissão — sem custo extra para você.</p>
     </div>
     <div class="modal-cta" id="modalCta" hidden>
-      <span class="gold">Gostou?</span> Salve este visual e mostre no salão. Depois monte o kit e mantenha o resultado em casa.
+      <span class="gold">Gostou?</span> Salve este visual e mostre no salão.
     </div>
   </div>
 </div>
 
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-/* =====================================================
-   HairOS — protótipo single-file
-   DNA visual: preto + dourado, serifa itálica, dock, modal
-   ===================================================== */
-
-/* ---------- IMAGENS (Unsplash) ---------- */
-const U = (id, w = 900) => `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
-const IMG = {
-  hero: U("1560066984-138dadb4c035", 1200),
-  cortes: U("1522337360788-8b13dee7a37e"),
-  coloracao: U("1519699047748-de8e457a634e"),
-  penteados: U("1595476108010-b4d1f102b1b1"),
-  noivas: U("1595959183082-7b570b7e08e2"),
-  produtos: U("1522338242992-e1a54906a8da"),
-  ferramentas: U("1521590832167-7bcbfaa6381f"),
-  marcas: U("1607779097040-26e80aa78e66"),
-  recomendacoes: U("1487412947147-5cebf100ffc2")
-};
-const FALLBACK = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600"><rect fill="#1a1612" width="400" height="600"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Georgia,serif" font-style="italic" font-size="64" fill="#d9bb90">H</text></svg>');
-function aplicarFallback(img){ img.addEventListener('error', function(){ if(this.src !== FALLBACK) this.src = FALLBACK; }); }
-
-/* ---------- CATEGORIAS ---------- */
-const categories = [
-  { id:"cortes", name:"Cortes", desc:"Referências femininas em 3 ângulos.", img:IMG.cortes, route:"#/cortes" },
-  { id:"coloracao", name:"Coloração", desc:"Loiros, ruivos, mechas e balayage.", img:IMG.coloracao, route:"#/coloracao" },
-  { id:"penteados", name:"Penteados", desc:"Coques, tranças e semipresos.", img:IMG.penteados, route:"#/penteados" },
-  { id:"noivas", name:"Noivas", desc:"Penteados e acessórios delicados.", img:IMG.noivas, route:"#/noivas" },
-  { id:"produtos", name:"Produtos", desc:"Tratamento, finalizadores e kits.", img:IMG.produtos, route:"#/produtos" },
-  { id:"ferramentas", name:"Ferramentas", desc:"Secadores, pranchas e escovas.", img:IMG.ferramentas, route:"#/ferramentas" },
-  { id:"marcas", name:"Marcas", desc:"Curadoria de marcas profissionais.", img:IMG.marcas, route:"#/marcas" },
-  { id:"recomendacoes", name:"Recomendações", desc:"Curadoria pessoal do Márcio.", img:IMG.recomendacoes, route:"#/recomendacoes" }
-];
-
-/* ---------- MARCAS ---------- */
-const brands = [
-  { id:"keune", name:"Keune", route:"#/marcas/keune" },
-  { id:"loreal-expert", name:"L'Oréal Expert", route:"#/marcas/loreal-expert" },
-  { id:"loreal", name:"L'Oréal", route:"#/marcas/loreal" },
-  { id:"joico", name:"Joico", route:"#/marcas/joico" },
-  { id:"schwarzkopf", name:"Schwarzkopf", route:"#/marcas/schwarzkopf" },
-  { id:"living-proof", name:"Living Proof", route:"#/marcas/living-proof" },
-  { id:"davines", name:"Davines", route:"#/marcas/davines" },
-  { id:"kerastase", name:"Kérastase", route:"#/marcas/kerastase" },
-  { id:"mac", name:"MAC", route:"#/marcas/mac" },
-  { id:"igora-royal", name:"Igora Royal", route:"#/marcas/igora-royal" },
-  { id:"moroccanoil", name:"Moroccanoil", route:"#/marcas/moroccanoil" }
-];
-
-/* ---------- 14 LISTAS AFILIADAS ---------- */
-const affiliateLists = [
-  { id:"kit-keune", title:"Kit Keune", category:"Keune", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Produtos profissionais Keune selecionados." },
-  { id:"kit-loreal-expert", title:"Kit L'Oréal Expert", category:"L'Oréal Expert", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Linha profissional L'Oréal Expert." },
-  { id:"kit-loreal", title:"Kit L'Oréal", category:"L'Oréal", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Produtos L'Oréal para cuidados capilares." },
-  { id:"kit-joico", title:"Kit Joico", category:"Joico", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Tratamentos e finalizadores Joico." },
-  { id:"kit-schwarzkopf", title:"Kit Schwarzkopf", category:"Schwarzkopf", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Coloração e tratamento Schwarzkopf." },
-  { id:"kit-living-proof", title:"Kit Living Proof", category:"Living Proof", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Living Proof — ciência capilar." },
-  { id:"kit-davines", title:"Kit Davines", category:"Davines", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Beleza sustentável Davines." },
-  { id:"ferramentas-lista", title:"Ferramentas", category:"Ferramentas", image:IMG.ferramentas, productCount:null, affiliateUrl:"", description:"Secadores, pranchas e modeladores." },
-  { id:"kit-kerastase", title:"Kit Kérastase", category:"Kérastase", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Cuidado premium Kérastase." },
-  { id:"kit-mac", title:"Kit MAC", category:"MAC", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Maquiagem profissional MAC." },
-  { id:"kit-noiva", title:"Kit Noiva", category:"Noivas", image:IMG.noivas, productCount:null, affiliateUrl:"", description:"Produtos e acessórios para noivas." },
-  { id:"kit-igora-royal", title:"Kit Igora Royal", category:"Igora Royal", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Coloração profissional Igora Royal." },
-  { id:"kit-moroccanoil", title:"Kit Moroccanoil", category:"Moroccanoil", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Óleos e tratamentos Moroccanoil." },
-  { id:"minhas-recomendacoes", title:"Minhas Recomendações", category:"Curadoria", image:IMG.recomendacoes, productCount:null, affiliateUrl:"", description:"Curadoria pessoal do Márcio Maker." }
-];
-
-/* ---------- INSPIRAÇÕES (com 3 ângulos) ---------- */
-const inspirations = [
-  { id:"c1", cat:"cortes", title:"Velvet", desc:"Bob ondulado na altura do queixo, com franja reta desfiada — movimento suave e acabamento macio.",
-    descricoes:{ frente:"De frente, o corte médio na altura do queixo emoldura o rosto com suavidade. A franja reta levemente desfiada suaviza a testa e as ondas naturais criam movimento.", lado:"De perfil, o comprimento na altura do queixo valoriza o contorno do rosto, enquanto as camadas suaves criam movimento e leveza.", atras:"Visto de costas, camadas bem distribuídas dão movimento às ondas. Acabamento na altura do queixo mantém o formato elegante." },
-    tags:["bob","ondulado","queixo"],
-    img:{ frente: U("1492106087820-71f1a00d2b11"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Leave-In Elixir Ultime — Kérastase", razao:"Define as ondas do bob sem pesar" },
-      { nome:"Máscara Intensa — Joico", razao:"Hidratação profunda para as pontas onduladas" },
-      { nome:"Babyliss Cerâmica — Ferramentas", razao:"Modela as ondas com calor uniforme" }
-    ]},
-  { id:"c2", cat:"cortes", title:"Pixie Texturizado", desc:"Pixie com topo volumoso e franja lateral jogada — curto e cheio de atitude.",
-    descricoes:{ frente:"Franja jogada de lado e topo volumoso alongam o rosto com leveza. Textura bagunçada dá atitude e movimento.", lado:"As camadas estratégicas criam efeito bagunçado proposital, com fios que se movimentam naturalmente.", atras:"Mantém volume e textura na nuca, com acabamento em degradê que arredonda o formato." },
-    tags:["curto","pixie","textura"],
-    img:{ frente: U("1503443207922-dff7d543fd0e"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Sérum Pro Longer — L'Oréal Expert", razao:"Fortalece os fios curtos e dá brilho" },
-      { nome:"Shampoo Moisture Recovery — Joico", razao:"Hidratação leve que mantém o volume natural" },
-      { nome:"Difusor Universal — Ferramentas", razao:"Espalha o calor por igual e preserva a textura" }
-    ]},
-  { id:"c3", cat:"cortes", title:"Butterfly Cut", desc:"Camadas longas com ondas soltas — efeito borboleta, fluido e sofisticado.",
-    descricoes:{ frente:"Franja cortina abre o rosto e camadas longas criam volume. Ondas soltas dão leveza e movimento fluido.", lado:"Camadas longas caem em movimento sobre os ombros. Ondas soltas acompanham o caimento natural com elegância.", atras:"Camadas sobrepostas garantem volume no topo e pontas soltas criam movimento fluido." },
-    tags:["longo","camadas","butterfly"],
-    img:{ frente: U("1519699047748-de8e457a634e"), lado: U("1522337360788-8b13dee7a37e"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Leave-In Elixir Ultime — Kérastase", razao:"Define as ondas longas sem pesar" },
-      { nome:"Máscara Intensa — Joico", razao:"Hidratação profunda para as pontas longas" },
-      { nome:"Babyliss Cerâmica — Ferramentas", razao:"Modela as ondas longas com calor uniforme" }
-    ]},
-  { id:"c4", cat:"cortes", title:"Italian Bob", desc:"Bob ondulado na altura do queixo, com franja lateral e mechas mel.",
-    descricoes:{ frente:"Franja lateral jogada e ondas texturizadas emolduram o rosto com movimento. Comprimento na altura do queixo valoriza o contorno facial.", lado:"Ondas naturais caem suavemente criando movimento. Franja lateral alonga o rosto com elegância.", atras:"Ondas uniformes e camadas bem distribuídas garantem movimento e volume controlado." },
-    tags:["bob","ondulado","mel"],
-    img:{ frente: U("1522337360788-8b13dee7a37e"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Modelador Curves — Ferramentas", razao:"Cria as ondas soltas do bob" },
-      { nome:"Leave-In Elixir Ultime — Kérastase", razao:"Sela as ondas e dá brilho de salão" },
-      { nome:"Máscara Nutrioil — L'Oréal Expert", razao:"Nutre as camadas sem perder o movimento" }
-    ]},
-  /* COLORAÇÃO */
-  { id:"co1", cat:"coloracao", title:"Loiro Mel", desc:"Loiro quente com mechas mel e iluminado.",
-    descricoes:{ frente:"Loiro quente com mechas mel iluminadas que emolduram o rosto com brilho e movimento.", lado:"Mechas estratégicas criam profundidade e dimensão ao longo do comprimento.", atras:"Mechas bem distribuídas garantem caimento iluminado e natural." },
-    tags:["loiro","mel","mechas"],
-    img:{ frente: U("1519699047748-de8e457a634e"), lado: U("1522337360788-8b13dee7a37e"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Shampoo Blond Absolu — Kérastase", razao:"Mantém o loiro frio e iluminado" },
-      { nome:"Máscara Blond Absolu — Kérastase", razao:"Nutre e sela as cutículas dos fios loiros" },
-      { nome:"Leave-In Nutritive — L'Oréal Expert", razao:"Protege o loiro do calor do secador" }
-    ]},
-  { id:"co2", cat:"coloracao", title:"Ruivo Cobre", desc:"Ruivo intenso com reflexos cobre.",
-    descricoes:{ frente:"Ruivo intenso com reflexos cobre que criam profundidade e movimento.", lado:"Mechas cobre estratégicas garantem dimensão ao longo do comprimento.", atras:"Caimento uniforme com brilho cobre intenso." },
-    tags:["ruivo","cobre","intenso"],
-    img:{ frente: U("1605980776566-0486c3ac7617"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Shampoo Reflection — L'Oréal Expert", razao:"Preserva o ruivo cobre vibrante por mais tempo" },
-      { nome:"Máscara Reflection — L'Oréal Expert", razao:"Sela a cutícula e intensifica o brilho cobre" },
-      { nome:"Leave-In Vitamino Color — L'Oréal Expert", razao:"Protege o ruivo do desbotamento" }
-    ]},
-  { id:"co3", cat:"coloracao", title:"Balayage Natural", desc:"Degradê suave com transição natural.",
-    descricoes:{ frente:"Degradê suave que ilumina a parte frontal e cria transição natural com a raiz.", lado:"Mechas estratégicas caem em iluminado natural ao longo do comprimento.", atras:"Transição suave e mechas bem distribuídas garantem naturalidade ao caimento." },
-    tags:["balayage","degradê","natural"],
-    img:{ frente: U("1595476108010-b4d1f102b1b1"), lado: U("1519699047748-de8e457a634e"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Shampoo Blond Absolu — Kérastase", razao:"Mantém o balayage frio e luminoso" },
-      { nome:"Óleo Elixir Ultime — Kérastase", razao:"Sela as pontas iluminadas com brilho" },
-      { nome:"Máscara Nutritive — L'Oréal Expert", razao:"Nutre a transição natural do balayage" }
-    ]},
-  /* PENTEADOS */
-  { id:"p1", cat:"penteados", title:"Coque Baixo Elegante", desc:"Coque baixo com fios soltos para um look sofisticado.",
-    descricoes:{ frente:"Coque baixo com fios soltos ao redor do rosto para um efeito sofisticado e natural.", lado:"Fios soltos emoldaram a lateral e o coque baixo valoriza o contorno do rosto.", atras:"Coque baixo bem estruturado com textura suave e acabamento elegante." },
-    tags:["coque","baixo","elegante"],
-    img:{ frente: U("1595476108010-b4d1f102b1b1"), lado: U("1522337360788-8b13dee7a37e"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Spray Fixador — Keune", razao:"Mantém o coque no lugar o dia todo" },
-      { nome:"Sérum Discipline — Kérastase", razao:"Controla frizz e mantém acabamento polido" },
-      { nome:"Escova de Cerdas Naturais — Ferramentas", razao:"Alinha os fios antes de prender" }
-    ]},
-  { id:"p2", cat:"penteados", title:"Trança Lateral", desc:"Trança lateral suave com textura natural.",
-    descricoes:{ frente:"Trança lateral suave com fios soltos emoldurando o rosto.", lado:"Trança desconstruída com textura natural e movimento.", atras:"Trança lateral bem distribuída com acabamento natural." },
-    tags:["trança","lateral","natural"],
-    img:{ frente: U("1522337360788-8b13dee7a37e"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Texturizador Surf Spray — Keune", razao:"Dá textura e movimento à trança" },
-      { nome:"Leave-In Ondas — Joico", razao:"Define as ondas dos fios soltos" },
-      { nome:"Escova Modeladora — Ferramentas", razao:"Alinha os fios antes de trançar" }
-    ]},
-  /* NOIVAS */
-  { id:"n1", cat:"noivas", title:"Noiva Clássica", desc:"Coque clássico com véu e acessório delicado.",
-    descricoes:{ frente:"Coque clássico com fios soltos emoldurando o rosto e acessório delicado.", lado:"Fios soltos na lateral e coque estruturado criam elegância atemporal.", atras:"Coque clássico bem estruturado, com véu e acabamento polido." },
-    tags:["noiva","clássico","véu"],
-    img:{ frente: U("1595959183082-7b570b7e08e2"), lado: U("1595476108010-b4d1f102b1b1"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Spray Fixador — Keune", razao:"Fixa o coque por horas" },
-      { nome:"Óleo Elixir Ultime — Kérastase", razao:"Brilho impecável no dia do casamento" },
-      { nome:"Máscara Nutritive — L'Oréal Expert", razao:"Prepara os fios antes do grande dia" }
-    ]},
-  /* PRODUTOS */
-  { id:"pr1", cat:"produtos", title:"Máscara Reconstrutora", desc:"Máscara de tratamento intensivo para fios danificados.",
-    descricoes:{ frente:"Máscara reconstrutora com ação intensiva para fios danificados.", lado:"Nutrição profunda e reconstrução da fibra capilar.", atras:"Resultado: fios mais fortes, macios e com brilho saudável." },
-    tags:["máscara","tratamento"],
-    img:{ frente: U("1522338242992-e1a54906a8da"), lado: U("1608248543803-ba4f8c70ae0b"), atras: U("1522337660859-02fbefca4702") },
-    kit:[
-      { nome:"Máscara Intensa — Joico", razao:"Reconstrução profunda da fibra capilar" },
-      { nome:"Condicionador Resistance — Kérastase", razao:"Complementa a hidratação e dá brilho" }
-    ]},
-  /* FERRAMENTAS */
-  { id:"f1", cat:"ferramentas", title:"Prancha Profissional", desc:"Prancha de cerâmica para alisamento e modelagem.",
-    descricoes:{ frente:"Prancha com placas de cerâmica que distribuem calor uniformemente.", lado:"Ideal para alisamento e ondas, com controle de temperatura.", atras:"Resultado: fios lisos com brilho e sem danificar a fibra." },
-    tags:["prancha","profissional"],
-    img:{ frente: U("1521590832167-7bcbfaa6381f"), lado: U("1522337660859-02fbefca4702"), atras: U("1522337360788-8b13dee7a37e") },
-    kit:[
-      { nome:"Prancha Cerâmica — Ferramentas", razao:"Calor uniforme sem danificar a fibra" },
-      { nome:"Protetor Térmico — Keune", razao:"Protege os fios do calor" }
-    ]}
-];
-
-const ANGULOS = { frente:"Frente", lado:"Lado", atras:"Atrás" };
-const ORDEM_ANGULOS = ["frente","lado","atras"];
-
-/* filtros por categoria */
-const filtersByCat = {
-  cortes: ["Todos","Bob","Pixie","Longo"],
-  coloracao: ["Todos","Loiro","Ruivo","Balayage"],
-  penteados: ["Todos","Coque","Trança"],
-  noivas: ["Todos","Clássico"],
-  produtos: ["Todos","Tratamento"],
-  ferramentas: ["Todos","Prancha"]
-};
-
-/* ============================================ */
-let currentRoute = "#/";
-let activeFilter = "Todos";
-
-/* helpers */
-const $  = (s, r=document) => r.querySelector(s);
-const $$ = (s, r=document) => [...r.querySelectorAll(s)];
-const normalize = s => (s||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-
-/* favoritos */
-const FAV_KEY = "hairos_favoritos";
-function getFavs(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }catch(e){ return []; } }
-function setFavs(a){ try{ localStorage.setItem(FAV_KEY, JSON.stringify(a)); }catch(e){} }
-function isFav(id){ return getFavs().includes(id); }
-function toggleFav(id){ const a = getFavs(); const i = a.indexOf(id); i===-1 ? a.push(id) : a.splice(i,1); setFavs(a); updateFavBadges(); return a.includes(id); }
-function updateFavBadges(){
-  const n = getFavs().length;
-  const top = $("#favBadgeTop"), bot = $("#favBadgeBottom");
-  if(top){ top.textContent = n; top.parentElement.classList.toggle("has-fav", n>0); }
-  if(bot){ bot.textContent = n; bot.parentElement.classList.toggle("has-fav", n>0); }
-}
-
-function getCatById(id){ return categories.find(c => c.id === id); }
-function getBrandById(id){ return brands.find(b => b.id === id); }
-function getAffiliateById(id){ return affiliateLists.find(a => a.id === id); }
-
-/* ============================================ */
-/* RENDER HELPERS */
-function categoryCard(cat){
-  return `
-    <a class="cat-card" href="${cat.route}" aria-label="${cat.name}">
-      <img src="${cat.img}" alt="${cat.name}" loading="lazy" />
-      <div class="cat-card-body">
-        <h3>${cat.name}</h3>
-        <p>${cat.desc}</p>
-        <span class="arrow">Ver →</span>
-      </div>
-    </a>`;
-}
-function brandCard(b){
-  return `<a class="brand-card" href="${b.route}">${b.name}</a>`;
-}
-function inspCard(insp){
-  const fav = isFav(insp.id);
-  const img = insp.img.frente || insp.img;
-  return `
-    <article class="card" data-insp="${insp.id}" tabindex="0" role="button" aria-label="Ver ${insp.title}">
-      <div class="card-inner">
-        <img class="h-md" src="${img}" alt="${insp.title}" loading="lazy" />
-        <div class="card-label">${insp.title} <span class="angle">Frente</span></div>
-        <div class="card-actions">
-          <button type="button" class="card-action fav ${fav?'on':''}" data-fav="${insp.id}" aria-pressed="${fav}" aria-label="${fav?'Remover dos favoritos':'Adicionar aos favoritos'}">
-            <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.7 5 6.1 5c2.1 0 3.6 1.2 4.4 2.5h3C14.3 6.2 15.8 5 17.9 5c3.4 0 5.2 3.4 3.7 6.8C19.5 16.4 12 21 12 21z"/></svg>
-          </button>
-          <button type="button" class="card-action share" data-share="${insp.id}" aria-label="Compartilhar">
-            <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          </button>
-        </div>
-      </div>
-    </article>`;
-}
-
-/* ============================================ */
-/* VIEWS */
-function renderHome(){
-  const recommended = affiliateLists.filter(a => ["Kit Joico","Kit Kérastase","Ferramentas"].includes(a.category)).slice(0,3);
-  return `
-  <div class="view">
-    <section class="hero">
-      <span class="hero-eyebrow">Inspiração • Visagismo • Você</span>
-      <h1 class="hero-title">Descubra o seu <em>próximo visual</em>.</h1>
-      <p class="hero-sub">Cortes, colorações, penteados e inspirações profissionais para valorizar sua beleza e expressar sua identidade.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#/categorias">Explorar categorias</a>
-        <a class="btn btn-outline" href="#/cortes">Ver cortes</a>
-      </div>
-    </section>
-
-    <div class="hero-media-wrap">
-      <img src="${IMG.hero}" alt="Modelo com cabelo em destaque" />
-      <div class="hero-media-label">
-        <span class="eyebrow">Destaque</span>
-        <h2>Elegância em cada ângulo.</h2>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="benefits">
-        <div class="benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          <div><b>Inspirações organizadas</b><span>Por categoria e ângulo.</span></div>
-        </div>
-        <div class="benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          <div><b>Conteúdo de visagismo</b><span>Formato e estilo.</span></div>
-        </div>
-        <div class="benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
-          <div><b>Listas profissionais</b><span>Curadoria de produtos.</span></div>
-        </div>
-        <div class="benefit">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
-          <div><b>Em qualquer tela</b><span>Mobile, tablet e desktop.</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Categorias</span>
-          <h2>Explore por inspiração</h2>
-          <p class="lead">Cortes, coloração, penteados, noivas, produtos e ferramentas.</p>
-        </div>
-        <a class="link-more" href="#/categorias">Ver todas
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="grid-cat">
-        ${categories.slice(0,6).map(categoryCard).join("")}
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Marcas</span>
-          <h2>Marcas profissionais</h2>
-          <p class="lead">Curadoria de marcas que respeitamos no universo da beleza.</p>
-        </div>
-        <a class="link-more" href="#/marcas">Ver todas
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="grid-brand">
-        ${brands.slice(0,8).map(brandCard).join("")}
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Curadoria</span>
-          <h2>Minhas Recomendações</h2>
-          <p class="lead">Kits e ferramentas escolhidos a dedo para cuidar do cabelo.</p>
-        </div>
-        <a class="link-more" href="#/recomendacoes">Ver tudo
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="grid-rec">
-        ${recommended.map(r => `
-          <a class="rec-card" href="#/lista/${r.id}">
-            <img src="${r.image}" alt="${r.title}" loading="lazy" />
-            <div class="rec-card-body">
-              <span class="eyebrow">${r.category}</span>
-              <h3>${r.title}</h3>
-              <p>${r.description}</p>
-            </div>
-          </a>
-        `).join("")}
-      </div>
-    </section>
-
-    <div class="footer-mini">
-      HairOS · <span class="gold">Salve o corte · Compre o kit · Mantenha o visual</span>
-      <div class="footer-links">
-        <a href="#/sobre">Sobre</a>
-        <a href="#/contato">Contato</a>
-        <a href="#/privacidade">Privacidade</a>
-        <a href="#/termos">Termos</a>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderCategorias(){
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Categorias</h1>
-      <span class="divider"></span>
-      <div class="sub">Explore por<br><span class="highlight">inspiração</span></div>
-    </div>
-    <section class="section">
-      <div class="grid-cat">
-        ${categories.map(categoryCard).join("")}
-      </div>
-    </section>
-    <div class="footer-mini">HairOS · <span class="gold">Todas as categorias</span></div>
-  </div>`;
-}
-
-function renderCategoryPage(catId){
-  const cat = getCatById(catId);
-  if(!cat) return renderNotFound();
-  const filters = filtersByCat[catId] || ["Todos"];
-  const list = inspirations.filter(i => i.cat === catId);
-  const filtered = activeFilter === "Todos" ? list : list.filter(i => normalize(i.tags.join(" ")).includes(normalize(activeFilter)) || normalize(i.title).includes(normalize(activeFilter)));
-
-  return `
-  <div class="view">
-    <div class="chips-carousel">
-      <div class="chips" role="tablist" aria-label="Filtrar ${cat.name}">
-        ${filters.map(f => `<button class="chip" data-filter="${f}" aria-pressed="${f===activeFilter}">${f}</button>`).join("")}
-      </div>
-    </div>
-    <div class="page-title">
-      <h1>${cat.name}</h1>
-      <span class="divider"></span>
-      <div class="sub">${cat.desc}</div>
-    </div>
-    ${filtered.length ? `<div id="catalogo">${filtered.map(inspCard).join("")}</div>` : `
-      <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
-        <div style="font-size:2rem;opacity:.4;margin-bottom:10px">♡</div>
-        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--text-sec);margin-bottom:6px">Nada por aqui</div>
-        <div style="font-size:.8rem;opacity:.7">Tente outro filtro.</div>
-      </div>
-    `}
-    <div class="footer-mini">HairOS · <span class="gold">${cat.name}</span></div>
-  </div>`;
-}
-
-function renderMarcas(){
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Marcas</h1>
-      <span class="divider"></span>
-      <div class="sub">Marcas profissionais<br><span class="highlight">de beleza</span></div>
-    </div>
-    <section class="section">
-      <div class="grid-brand">
-        ${brands.map(brandCard).join("")}
-      </div>
-    </section>
-    <div class="footer-mini">HairOS · <span class="gold">Curadoria de marcas</span></div>
-  </div>`;
-}
-
-function renderMarca(id){
-  const brand = getBrandById(id);
-  if(!brand) return renderNotFound();
-  const list = affiliateLists.find(a => a.category === brand.name) || null;
-  const relatedInsp = inspirations.slice(0,4);
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>${brand.name}</h1>
-      <span class="divider"></span>
-      <div class="sub">Curadoria HairOS<br><span class="highlight">${brand.name}</span></div>
-    </div>
-    ${list ? renderListHero(list) : `<div class="pending-badge" style="display:block;text-align:center;max-width:max-content;margin:0 auto 24px">Em curadoria</div>`}
-    <section class="section">
-      <div class="section-head"><h2 style="font-family:'Playfair Display',serif;font-style:italic">Inspirações relacionadas</h2></div>
-      <div id="catalogo">${relatedInsp.map(inspCard).join("")}</div>
-    </section>
-    <div class="footer-mini">HairOS · <span class="gold">${brand.name}</span></div>
-  </div>`;
-}
-
-function renderListHero(list){
-  return `
-    <div style="border:1px solid var(--border-gold);border-radius:14px;overflow:hidden;margin:0 0 26px;background:var(--bg-card)">
-      <div style="aspect-ratio:16/9;overflow:hidden;background:var(--bg-elevated)">
-        <img src="${list.image}" alt="${list.title}" style="width:100%;height:100%;object-fit:cover" />
-      </div>
-      <div style="padding:22px">
-        <span style="font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:600">${list.category}</span>
-        <h2 style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.4rem;color:var(--text);margin:8px 0 8px;line-height:1.2">${list.title}</h2>
-        <p style="font-size:.82rem;color:var(--text-muted);font-weight:300;line-height:1.6;margin-bottom:16px">${list.description}</p>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
-          <span style="font-size:.65rem;padding:5px 10px;border-radius:12px;background:rgba(217,187,144,.14);color:var(--gold);font-weight:500">${list.productCount ? list.productCount+' produtos' : 'Em curadoria'}</span>
-          <span style="font-size:.65rem;padding:5px 10px;border-radius:12px;background:rgba(217,187,144,.14);color:var(--gold);font-weight:500">Afiliado Mercado Livre</span>
-        </div>
-        ${list.affiliateUrl ? `
-          <a class="btn btn-primary" href="${list.affiliateUrl}" target="_blank" rel="noopener noreferrer nofollow sponsored">Ver lista no Mercado Livre</a>
-        ` : `
-          <div class="pending-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-            Link de afiliado pendente de configuração
-          </div>
-        `}
-      </div>
-    </div>`;
-}
-
-function renderRecomendacoes(){
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Minhas Recomendações</h1>
-      <span class="divider"></span>
-      <div class="sub">Curadoria pessoal<br><span class="highlight">do Márcio</span></div>
-    </div>
-    <section class="section">
-      <div class="grid-rec">
-        ${affiliateLists.map(r => `
-          <a class="rec-card" href="#/lista/${r.id}">
-            <img src="${r.image}" alt="${r.title}" loading="lazy" />
-            <div class="rec-card-body">
-              <span class="eyebrow">${r.category}</span>
-              <h3>${r.title}</h3>
-              <p>${r.description}</p>
-            </div>
-          </a>
-        `).join("")}
-      </div>
-    </section>
-    <div class="footer-mini">HairOS · <span class="gold">14 listas de afiliado</span></div>
-  </div>`;
-}
-
-function renderListaDetalhe(id){
-  const list = getAffiliateById(id);
-  if(!list) return renderNotFound();
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>${list.title}</h1>
-      <span class="divider"></span>
-      <div class="sub">Lista de produtos<br><span class="highlight">${list.category}</span></div>
-    </div>
-    ${renderListHero(list)}
-    <section class="section" style="max-width:640px;margin:0 auto">
-      <p style="font-size:.88rem;color:var(--text-muted);font-weight:300;line-height:1.75;text-align:center">Esta é uma lista de produtos selecionados com cuidado para facilitar sua pesquisa. Ao clicar no botão (quando configurado), você será direcionado ao Mercado Livre em uma nova aba. Podemos receber uma comissão por compras qualificadas, sem custo adicional para você.</p>
-    </section>
-    <div class="footer-mini">HairOS · <span class="gold">${list.title}</span></div>
-  </div>`;
-}
-
-function renderFavoritos(){
-  const favs = getFavs();
-  const items = inspirations.filter(i => favs.includes(i.id));
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Favoritos</h1>
-      <span class="divider"></span>
-      <div class="sub">Suas inspirações<br><span class="highlight">salvas</span></div>
-    </div>
-    ${items.length ? `
-      <div id="catalogo">${items.map(inspCard).join("")}</div>
-    ` : `
-      <div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
-        <div style="font-size:2rem;opacity:.4;margin-bottom:10px">♡</div>
-        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--text-sec);margin-bottom:6px">Nenhum favorito ainda</div>
-        <div style="font-size:.8rem;opacity:.7;margin-bottom:20px">Toque no ♡ de um card para salvá-lo aqui.</div>
-        <a class="btn btn-outline" href="#/categorias">Explorar categorias</a>
-      </div>
-    `}
-    <div class="footer-mini">HairOS · <span class="gold">Favoritos salvos localmente</span></div>
-  </div>`;
-}
-
-function renderSobre(){
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Sobre</h1>
-      <span class="divider"></span>
-      <div class="sub">A ideia por trás<br><span class="highlight">do HairOS</span></div>
-    </div>
-    <div class="sobre-conteudo">
-      <div class="sobre-marca">H</div>
-      <span class="sobre-tag">HairOS</span>
-      <p>O <span class="gold">HairOS</span> nasceu de uma ideia simples: escolher um corte de cabelo não deveria ser um chute. A maioria das pessoas chega ao salão sem saber o que pedir, e sai sem saber como manter o resultado.</p>
-      <p>Aqui você encontra <span class="gold">referências organizadas por ângulo</span> — frente, lado e atrás — para mostrar exatamente o que quer. E para cada visual, uma seleção de <span class="gold">produtos que realmente funcionam</span> para manter o resultado em casa.</p>
-      <span class="sobre-fio"></span>
-      <p>Não vendemos produtos. Indicamos os que fazem sentido, com link direto para você comprar onde preferir. Se você comprar por um desses links, podemos receber uma comissão — <span class="gold">sem nenhum custo extra para você</span>.</p>
-      <p>O objetivo é um só: <span class="gold">você sair do salão sabendo exatamente como manter o visual</span> até a próxima visita.</p>
-    </div>
-    <div class="footer-mini">HairOS · <span class="gold">Márcio Maker · Beauty Tech</span></div>
-  </div>`;
-}
-
-function renderContato(){
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Contato</h1>
-      <span class="divider"></span>
-      <div class="sub">Fale com<br><span class="highlight">o HairOS</span></div>
-    </div>
-    <div class="contato-conteudo">
-      <div class="contato-intro">
-        <p>Dúvidas, sugestões de cortes, parcerias ou pedidos de kits personalizados — envie uma mensagem. Respondemos em até 24h.</p>
-        <div class="contato-email-inline"><span>✉</span> hairbymarciostylist@gmail.com</div>
-      </div>
-      <div class="contato-form-section">
-        <div class="contato-form-eyebrow">mensagem</div>
-        <form class="contato-form" id="contatoForm" novalidate>
-          <div class="contato-form-row">
-            <div class="contato-field">
-              <label for="contatoNome">nome</label>
-              <input type="text" id="contatoNome" placeholder="seu nome" required autocomplete="name">
-            </div>
-            <div class="contato-field">
-              <label for="contatoEmail">e-mail</label>
-              <input type="email" id="contatoEmail" placeholder="seu@email.com" required autocomplete="email">
-            </div>
-          </div>
-          <div class="contato-field">
-            <label for="contatoMensagem">mensagem</label>
-            <textarea id="contatoMensagem" placeholder="Escreva sua mensagem..." required></textarea>
-          </div>
-          <button type="submit" id="contatoSubmitBtn">enviar mensagem</button>
-        </form>
-      </div>
-    </div>
-    <div class="footer-mini">HairOS · <span class="gold">Respondemos em até 24h</span></div>
-  </div>`;
-}
-
-function renderInstitucional(type){
-  const map = {
-    privacidade: {
-      title: "Política de Privacidade",
-      body: `<p>O HairOS valoriza sua privacidade. Este protótipo não coleta dados pessoais. Favoritos são armazenados apenas no seu navegador via localStorage.</p>
-             <ul style="color:var(--text-muted);font-size:.88rem;line-height:1.8;padding-left:20px;list-style:disc;max-width:560px;margin:0 auto;text-align:left">
-               <li>Nenhuma conta é necessária.</li>
-               <li>Nenhum dado é enviado a servidores.</li>
-               <li>Links afiliados serão claramente sinalizados.</li>
-             </ul>`
-    },
-    termos: {
-      title: "Termos de Uso",
-      body: `<p>Ao utilizar o HairOS você concorda com os seguintes termos:</p>
-             <ul style="color:var(--text-muted);font-size:.88rem;line-height:1.8;padding-left:20px;list-style:disc;max-width:560px;margin:0 auto;text-align:left">
-               <li>O conteúdo é oferecido para fins informativos e de inspiração.</li>
-               <li>Imagens são provenientes do Unsplash para demonstração.</li>
-               <li>Links de afiliados podem gerar comissão sem custo adicional para você.</li>
-               <li>Recomendações não substituem avaliação profissional.</li>
-             </ul>`
-    }
-  };
-  const info = map[type] || map.privacidade;
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>${info.title}</h1>
-      <span class="divider"></span>
-    </div>
-    <div class="sobre-conteudo">
-      ${info.body}
-    </div>
-    <div class="footer-mini">HairOS · <span class="gold">${info.title}</span></div>
-  </div>`;
-}
-
-function renderNotFound(){
-  return `
-  <div class="view">
-    <div class="page-title">
-      <h1>Página não encontrada</h1>
-      <span class="divider"></span>
-      <div class="sub">O endereço acessado<br><span class="highlight">não existe</span></div>
-    </div>
-    <div style="text-align:center;padding:40px 20px">
-      <a class="btn btn-outline" href="#/">Voltar ao início</a>
-    </div>
-    <div class="footer-mini">HairOS · <span class="gold">Erro 404</span></div>
-  </div>`;
-}
-
-/* ============================================ */
-/* ROUTER */
-function parseHash(){ return location.hash.replace(/^#/, "") || "/"; }
-
-function router(){
-  const path = parseHash();
-  currentRoute = "#" + path;
-  activeFilter = "Todos";
-  const app = $("#app");
-  let html = "";
-
-  if(path === "/" || path === "") html = renderHome();
-  else if(path === "/categorias") html = renderCategorias();
-  else if(path === "/cortes") html = renderCategoryPage("cortes");
-  else if(path === "/coloracao") html = renderCategoryPage("coloracao");
-  else if(path === "/penteados") html = renderCategoryPage("penteados");
-  else if(path === "/noivas") html = renderCategoryPage("noivas");
-  else if(path === "/produtos") html = renderCategoryPage("produtos");
-  else if(path === "/ferramentas") html = renderCategoryPage("ferramentas");
-  else if(path === "/marcas") html = renderMarcas();
-  else if(path.startsWith("/marcas/")) html = renderMarca(path.split("/")[2]);
-  else if(path === "/recomendacoes") html = renderRecomendacoes();
-  else if(path.startsWith("/lista/")) html = renderListaDetalhe(path.split("/")[2]);
-  else if(path === "/favoritos") html = renderFavoritos();
-  else if(path === "/sobre") html = renderSobre();
-  else if(path === "/contato") html = renderContato();
-  else if(path === "/privacidade" || path === "/termos") html = renderInstitucional(path.slice(1));
-  else html = renderNotFound();
-
-  app.innerHTML = html;
-  updateActiveNav();
-  window.scrollTo({ top: 0, behavior: "instant" });
-  bindAll();
-  atualizarDockIndicador();
-}
-
-function updateActiveNav(){
-  const path = parseHash();
-  let key = "";
-  if(path === "/" || path === "") key = "/";
-  else if(path === "/categorias" || ["/cortes","/coloracao","/penteados","/noivas","/produtos","/ferramentas"].includes(path)) key = "/categorias";
-  else if(path.startsWith("/marcas")) key = "/marcas";
-  else if(path === "/favoritos") key = "/favoritos";
-  else if(path === "/recomendacoes" || path.startsWith("/lista/")) key = "/recomendacoes";
-
-  $$(".top-nav a").forEach(a => a.classList.toggle("ativo", a.getAttribute("href") === key || (key === "/" && a.getAttribute("href") === "#/")));
-  $$(".dock-btn[data-route]").forEach(b => {
-    const on = b.dataset.route === key || (key === "/" && b.dataset.route === "#/");
-    b.classList.toggle("ativo", on);
-    if(on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
-  });
-  $$(".drawer-nav button").forEach(b => b.classList.toggle("ativo", b.dataset.route === "#" + path));
-}
-
-function atualizarDockIndicador(){
-  const routes = ["#/","#/categorias","#/marcas","#/favoritos","#mais"];
-  const path = currentRoute;
-  let idx = 0;
-  if(path === "#/") idx = 0;
-  else if(path === "#/categorias" || ["#/cortes","#/coloracao","#/penteados","#/noivas","#/produtos","#/ferramentas"].includes(path)) idx = 1;
-  else if(path.startsWith("#/marcas")) idx = 2;
-  else if(path === "#/favoritos") idx = 3;
-  else idx = 4;
-  const dock = $("#dock");
-  if(dock) dock.style.setProperty("--i", idx);
-}
-
-/* ============================================ */
-/* BIND EVENTS */
-function bindAll(){
-  // chips de filtro
-  $$(".chip[data-filter]").forEach(chip => {
-    chip.addEventListener("click", () => {
-      activeFilter = chip.dataset.filter;
-      router();
-    });
-  });
-
-  // cards de inspiração
-  $$(".card[data-insp]").forEach(card => {
-    card.addEventListener("click", (e) => {
-      if(e.target.closest(".card-action")) return;
-      openModal(card.dataset.insp);
-    });
-    card.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openModal(card.dataset.insp); }
-    });
-  });
-
-  // botões favorito nos cards
-  $$(".card-action.fav[data-fav]").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.fav;
-      const nowFav = toggleFav(id);
-      btn.classList.toggle("on", nowFav);
-      btn.setAttribute("aria-pressed", nowFav);
-      btn.classList.add("pop");
-      setTimeout(() => btn.classList.remove("pop"), 500);
-      showToast(nowFav ? "Adicionado aos favoritos ♥" : "Removido dos favoritos");
-      if(parseHash() === "/favoritos") router();
-    });
-  });
-
-  // botão compartilhar nos cards
-  $$(".card-action.share[data-share]").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const insp = inspirations.find(i => i.id === btn.dataset.share);
-      if(insp) compartilharInsp(insp);
-    });
-  });
-}
-
-/* ============================================ */
-/* MODAL */
-const modal = $("#modal");
-const imgModal = $("#imgModal");
-const modalTitulo = $("#modalTitulo");
-const modalDesc = $("#modalDesc");
-const modalThumbs = $("#modalThumbs");
-const modalStage = $("#modalStage");
-const modalInfo = $("#modalInfo");
-const btnFechar = $("#fecharModal");
-const btnPrev = $("#btnPrev");
-const btnNext = $("#btnNext");
-const modalFav = $("#modalFav");
-const modalShare = $("#modalShare");
-
-let inspAtual = null;
-let anguloAtual = 0;
-let ultimoFoco = null;
-let zoomAtivo = false;
-let panX = 0, panY = 0, panStartX = 0, panStartY = 0, panOrigX = 0, panOrigY = 0, arrastandoImg = false;
-
-function openModal(id){
-  const insp = inspirations.find(i => i.id === id);
-  if(!insp) return;
-  ultimoFoco = document.activeElement;
-  inspAtual = insp;
-  anguloAtual = 0;
-  resetZoom();
-  modal.scrollTop = 0;
-  mostrarAngulo();
-  modal.classList.add("ativo");
-  modal.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
-  btnFechar.focus();
-}
-
-function mostrarAngulo(){
-  if(!inspAtual) return;
-  resetZoom();
-  const angulo = ORDEM_ANGULOS[anguloAtual];
-  const rotulo = ANGULOS[angulo];
-  const src = inspAtual.img[angulo] || inspAtual.img.frente;
-  imgModal.src = src;
-  imgModal.alt = inspAtual.title + " - " + rotulo;
-  aplicarFallback(imgModal);
-
-  modalTitulo.textContent = inspAtual.title + " ";
-  const tag = document.createElement("span");
-  tag.className = "angle";
-  tag.textContent = rotulo;
-  modalTitulo.appendChild(tag);
-
-  modalDesc.textContent = (inspAtual.descricoes && inspAtual.descricoes[angulo]) || inspAtual.desc;
-
-  // thumbs
-  modalThumbs.innerHTML = "";
-  ORDEM_ANGULOS.forEach((a, i) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "thumb";
-    if(i === anguloAtual) b.setAttribute("aria-current","true");
-    b.setAttribute("aria-label", inspAtual.title + " - " + ANGULOS[a]);
-    const t = document.createElement("img");
-    t.alt = ""; aplicarFallback(t);
-    t.src = inspAtual.img[a] || inspAtual.img.frente;
-    b.appendChild(t);
-    b.addEventListener("click", () => { anguloAtual = i; mostrarAngulo(); });
-    modalThumbs.appendChild(b);
-  });
-
-  // kit
-  const itensKit = (inspAtual.kit || []);
-  const kitBox = $("#modalKit");
-  const kitLista = $("#modalKitLista");
-  kitLista.innerHTML = "";
-  const angulosMini = ["frente","lado","atras"];
-  itensKit.forEach((k, i) => {
-    const anguloMini = angulosMini[i % angulosMini.length];
-    kitLista.appendChild(criarKitProdutoCard(k, inspAtual, anguloMini));
-  });
-  kitBox.hidden = itensKit.length === 0;
-  $("#modalCta").hidden = itensKit.length === 0;
-
-  atualizarBotaoFavModal();
-}
-
-function criarKitProdutoCard(k, insp, anguloMini){
-  const a = document.createElement("a");
-  a.className = "kit-produto-card";
-  a.href = "#";
-  a.addEventListener("click", (e) => {
-    e.preventDefault();
-    showToast("Link afiliado pendente de configuração");
-  });
-  const imgDiv = document.createElement("div");
-  imgDiv.className = "kit-produto-img";
-  imgDiv.setAttribute("aria-hidden", "true");
-  const src = insp.img[anguloMini] || insp.img.frente;
-  imgDiv.style.backgroundImage = `url('${src}')`;
-  a.appendChild(imgDiv);
-
-  const infoDiv = document.createElement("div");
-  infoDiv.className = "kit-produto-info";
-  const tag = document.createElement("span"); tag.className = "kit-produto-corte"; tag.textContent = insp.title;
-  infoDiv.appendChild(tag);
-  const nome = document.createElement("span"); nome.className = "kit-produto-nome"; nome.textContent = k.nome;
-  infoDiv.appendChild(nome);
-  if(k.razao){ const r = document.createElement("span"); r.className = "kit-produto-razao"; r.textContent = k.razao; infoDiv.appendChild(r); }
-  a.appendChild(infoDiv);
-
-  const cta = document.createElement("span");
-  cta.className = "kit-produto-cta";
-  cta.setAttribute("aria-hidden", "true");
-  cta.innerHTML = "&#8599;";
-  a.appendChild(cta);
-  return a;
-}
-
-function atualizarBotaoFavModal(){
-  if(!modalFav || !inspAtual) return;
-  const fav = isFav(inspAtual.id);
-  modalFav.classList.toggle("on", fav);
-  modalFav.setAttribute("aria-pressed", fav);
-  modalFav.setAttribute("aria-label", fav ? "Remover dos favoritos" : "Adicionar aos favoritos");
-}
-
-function closeModal(){
-  if(!modal.classList.contains("ativo")) return;
-  resetZoom();
-  modal.classList.remove("ativo");
-  modal.setAttribute("aria-hidden", "true");
-  document.body.style.overflow = "";
-  if(ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
-}
-
-/* zoom */
-function getZoomScale(){
-  const baseW = imgModal.offsetWidth || 1;
-  const baseH = imgModal.offsetHeight || 1;
-  const maxW = window.innerWidth * 0.96;
-  const maxH = window.innerHeight * 0.96;
-  const limiteW = maxW / baseW;
-  const limiteH = maxH / baseH;
-  const limiteViewport = Math.min(limiteW, limiteH);
-  const desejada = window.matchMedia("(max-width: 640px)").matches ? 1.7 : 2.2;
-  return Math.min(desejada, limiteViewport);
-}
-function aplicarPan(){
-  const s = getZoomScale();
-  imgModal.style.transform = `scale(${s}) translate(${panX / s}px, ${panY / s}px)`;
-}
-function toggleZoom(){
-  zoomAtivo = !zoomAtivo;
-  const s = getZoomScale();
-  if(zoomAtivo){
-    imgModal.classList.add("zoom");
-    modal.classList.add("zoom-mode");
-    modalStage.classList.add("zoom-ativo");
-    panX = 0; panY = 0;
-    imgModal.style.transform = `scale(${s})`;
-    imgModal.style.transition = "transform .45s cubic-bezier(.22,1,.36,1),border-radius .45s cubic-bezier(.22,1,.36,1)";
-  } else {
-    resetZoom();
-  }
-}
-function resetZoom(){
-  if(!zoomAtivo) return;
-  zoomAtivo = false;
-  imgModal.classList.remove("zoom","arrastando");
-  modal.classList.remove("zoom-mode");
-  modalStage.classList.remove("zoom-ativo");
-  panX = 0; panY = 0;
-  imgModal.style.transform = "";
-  imgModal.style.transition = "";
-}
-function startPan(e){
-  if(!zoomAtivo) return;
-  arrastandoImg = true;
-  const t = e.touches ? e.touches[0] : e;
-  panStartX = t.clientX; panStartY = t.clientY;
-  panOrigX = panX; panOrigY = panY;
-  imgModal.classList.add("arrastando");
-  imgModal.style.transition = "none";
-  e.preventDefault();
-}
-function movePan(e){
-  if(!arrastandoImg) return;
-  const t = e.touches ? e.touches[0] : e;
-  let nx = panOrigX + (t.clientX - panStartX);
-  let ny = panOrigY + (t.clientY - panStartY);
-  const s = getZoomScale();
-  const baseW = imgModal.offsetWidth || 1;
-  const baseH = imgModal.offsetHeight || 1;
-  const extraX = Math.max(0, (baseW * s - baseW) / 2);
-  const extraY = Math.max(0, (baseH * s - baseH) / 2);
-  const overW = Math.max(0, (baseW * s - window.innerWidth) / 2);
-  const overH = Math.max(0, (baseH * s - window.innerHeight) / 2);
-  const maxX = Math.max(0, extraX - overW);
-  const maxY = Math.max(0, extraY - overH);
-  nx = Math.max(-maxX, Math.min(maxX, nx));
-  ny = Math.max(-maxY, Math.min(maxY, ny));
-  panX = nx; panY = ny;
-  aplicarPan();
-  e.preventDefault();
-}
-function endPan(){
-  if(!arrastandoImg) return;
-  arrastandoImg = false;
-  imgModal.classList.remove("arrastando");
-  imgModal.style.transition = "transform .3s cubic-bezier(.22,1,.36,1)";
-}
-
-btnFechar.addEventListener("click", closeModal);
-btnPrev.addEventListener("click", () => { anguloAtual = (anguloAtual - 1 + 3) % 3; mostrarAngulo(); });
-btnNext.addEventListener("click", () => { anguloAtual = (anguloAtual + 1) % 3; mostrarAngulo(); });
-
-modalFav.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if(!inspAtual) return;
-  const nowFav = toggleFav(inspAtual.id);
-  modalFav.classList.toggle("on", nowFav);
-  modalFav.setAttribute("aria-pressed", nowFav);
-  modalFav.classList.add("pop");
-  setTimeout(() => modalFav.classList.remove("pop"), 500);
-  showToast(nowFav ? "Adicionado aos favoritos ♥" : "Removido dos favoritos");
-  if(parseHash() === "/favoritos") router();
-});
-
-modalShare.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if(inspAtual) compartilharInsp(inspAtual);
-});
-
-imgModal.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if(!arrastandoImg) toggleZoom();
-});
-modal.addEventListener("click", (e) => {
-  if(e.target === modal || e.target === modalStage){
-    if(zoomAtivo){ resetZoom(); return; }
-    closeModal();
-  }
-});
-imgModal.addEventListener("mousedown", startPan);
-imgModal.addEventListener("touchstart", startPan, {passive:false});
-window.addEventListener("mousemove", movePan);
-window.addEventListener("touchmove", movePan, {passive:false});
-window.addEventListener("mouseup", endPan);
-window.addEventListener("touchend", endPan);
-window.addEventListener("touchcancel", endPan);
-
-document.addEventListener("keydown", (e) => {
-  if(!modal.classList.contains("ativo")) return;
-  if(e.key === "Escape"){
-    if(zoomAtivo){ resetZoom(); return; }
-    closeModal(); return;
-  }
-  if(e.key === "ArrowLeft"){ anguloAtual = (anguloAtual - 1 + 3) % 3; mostrarAngulo(); return; }
-  if(e.key === "ArrowRight"){ anguloAtual = (anguloAtual + 1) % 3; mostrarAngulo(); return; }
-});
-
-/* swipe no modal */
-let toqueX = null, toqueY = null;
-modalStage.addEventListener("touchstart", (e) => {
-  if(zoomAtivo || arrastandoImg) return;
-  toqueX = e.touches[0].clientX; toqueY = e.touches[0].clientY;
-}, {passive:true});
-modalStage.addEventListener("touchend", (e) => {
-  if(zoomAtivo || toqueX === null) return;
-  const dx = e.changedTouches[0].clientX - toqueX;
-  const dy = e.changedTouches[0].clientY - toqueY;
-  toqueX = null; toqueY = null;
-  if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2){
-    anguloAtual = (anguloAtual + (dx < 0 ? 1 : -1) + 3) % 3;
-    mostrarAngulo();
-  }
-}, {passive:true});
-
-/* toque em card mobile revela ações */
-document.addEventListener("touchstart", (e) => {
-  const card = e.target.closest(".card");
-  $$(".card.touch-ativo").forEach(c => c.classList.remove("touch-ativo"));
-  if(card) card.classList.add("touch-ativo");
-}, {passive:true});
-
-/* ============================================ */
-/* COMPARTILHAR */
-const SITE_URL = location.origin + location.pathname;
-function compartilharInsp(insp){
-  const rotulo = ANGULOS[ORDEM_ANGULOS[anguloAtual]] || "Frente";
-  const texto = `✨ ${insp.title} (${rotulo})\n${insp.desc}\n\n🌐 Veja mais no HairOS:\n${SITE_URL}`;
-  if(navigator.share){
-    navigator.share({ title: insp.title + " — HairOS", text: texto })
-      .catch(err => { if(!(err && err.name === "AbortError")) copiarLink(SITE_URL); });
-  } else {
-    copiarLink(SITE_URL);
-  }
-}
-function copiarLink(url){
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(() => showToast("Link copiado!")).catch(() => fallbackCopy(url));
-  } else fallbackCopy(url);
-}
-function fallbackCopy(text){
-  try{
-    const t = document.createElement("textarea");
-    t.value = text; t.style.cssText = "position:fixed;opacity:0;pointer-events:none";
-    document.body.appendChild(t); t.select();
-    document.execCommand("copy"); document.body.removeChild(t);
-    showToast("Link copiado!");
-  } catch(e){ showToast("Não foi possível copiar."); }
-}
-
-/* ============================================ */
-/* TOAST */
-function showToast(msg){
-  let t = $("#toastHairos");
-  if(!t){
-    t = document.createElement("div");
-    t.id = "toastHairos";
-    t.style.cssText = "position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%) translateY(20px);background:rgba(10,8,8,.95);backdrop-filter:blur(12px);border:1px solid rgba(217,187,144,.4);color:#edd4ac;padding:11px 22px;border-radius:30px;font:500 .8rem 'Inter',sans-serif;letter-spacing:.02em;opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.23,1,.32,1);z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.6);white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis";
-    document.body.appendChild(t);
-  }
-  t.textContent = msg;
-  requestAnimationFrame(() => {
-    t.style.opacity = "1";
-    t.style.transform = "translateX(-50%) translateY(0)";
-  });
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => {
-    t.style.opacity = "0";
-    t.style.transform = "translateX(-50%) translateY(20px)";
-  }, 2400);
-}
-
-/* ============================================ */
-/* DRAWER */
-const menuBtn = $("#menuBtn");
-const drawer = $("#drawer");
-const drawerOverlay = $("#drawerOverlay");
-const drawerFechar = $("#drawerFechar");
-function abrirDrawer(){
-  drawer.classList.add("aberto"); drawer.setAttribute("aria-hidden","false");
-  drawerOverlay.hidden = false;
-  requestAnimationFrame(() => drawerOverlay.classList.add("ativo"));
-  menuBtn.setAttribute("aria-expanded","true");
-  document.body.style.overflow = "hidden";
-  drawerFechar.focus();
-}
-function fecharDrawer(){
-  if(!drawer.classList.contains("aberto")) return;
-  drawer.classList.remove("aberto"); drawer.setAttribute("aria-hidden","true");
-  drawerOverlay.classList.remove("ativo");
-  menuBtn.setAttribute("aria-expanded","false");
-  document.body.style.overflow = "";
-  setTimeout(() => { drawerOverlay.hidden = true; }, 350);
-}
-menuBtn.addEventListener("click", abrirDrawer);
-drawerFechar.addEventListener("click", fecharDrawer);
-drawerOverlay.addEventListener("click", fecharDrawer);
-$$(".drawer-nav button").forEach(b => b.addEventListener("click", () => {
-  location.hash = b.dataset.route;
-  fecharDrawer();
-}));
-
-/* ============================================ */
-/* DOCK / MORE */
-$$(".dock-btn[data-route]").forEach(b => b.addEventListener("click", () => { location.hash = b.dataset.route; }));
-$("#moreBtn").addEventListener("click", abrirDrawer);
-$("#brandHome").addEventListener("click", () => { location.hash = "#/"; });
-
-/* nav auto-hide */
-(function initNavAuto(){
-  let ultimoY = window.scrollY, acumulado = 0, agendado = false;
-  const body = document.body;
-  function checar(){
-    agendado = false;
-    const y = Math.max(0, window.scrollY);
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const dy = y - ultimoY;
-    ultimoY = y;
-    if(y < 80 || y > max - 80){ body.classList.remove("nav-escondida"); acumulado = 0; return; }
-    acumulado = (Math.sign(dy) === Math.sign(acumulado)) ? acumulado + dy : dy;
-    if(acumulado > 14) body.classList.add("nav-escondida");
-    else if(acumulado < -8) body.classList.remove("nav-escondida");
-  }
-  window.addEventListener("scroll", () => { if(!agendado){ agendado = true; requestAnimationFrame(checar); } }, { passive:true });
-})();
-
-/* ============================================ */
-/* SEARCH */
-const searchInput = $("#searchInput");
-const searchClear = $("#searchClear");
-const searchResults = $("#searchResults");
-
-function performSearch(term){
-  const q = normalize(term.trim());
-  if(!q) return { insp:[], brands:[], lists:[] };
-  return {
-    insp: inspirations.filter(i => normalize(i.title + " " + i.tags.join(" ") + " " + i.desc).includes(q)),
-    brands: brands.filter(b => normalize(b.name).includes(q)),
-    lists: affiliateLists.filter(l => normalize(l.title + " " + l.description).includes(q))
-  };
-}
-function renderSearchResults(term){
-  if(!term.trim()){ searchResults.classList.remove("open"); searchResults.innerHTML = ""; return; }
-  const r = performSearch(term);
-  const total = r.insp.length + r.brands.length + r.lists.length;
-  let html = "";
-  if(!total){
-    html = `<div class="search-empty">Nenhum resultado para "<b>${term}</b>".</div>`;
-  } else {
-    if(r.insp.length){
-      html += `<div class="search-group-title">Inspirações</div>`;
-      html += r.insp.slice(0,6).map(i => `
-        <button class="search-result" data-goto="${i.id}">
-          <img src="${i.img.frente}" alt="" />
-          <div><div class="sr-title">${i.title}</div><div class="sr-sub">${i.tags.slice(0,2).join(" · ")}</div></div>
-        </button>
-      `).join("");
-    }
-    if(r.brands.length){
-      html += `<div class="search-group-title">Marcas</div>`;
-      html += r.brands.slice(0,4).map(b => `
-        <a class="search-result" href="${b.route}" data-link>
-          <div class="sr-thumb">${b.name[0]}</div>
-          <div><div class="sr-title">${b.name}</div><div class="sr-sub">Marca</div></div>
-        </a>
-      `).join("");
-    }
-    if(r.lists.length){
-      html += `<div class="search-group-title">Listas</div>`;
-      html += r.lists.slice(0,4).map(l => `
-        <a class="search-result" href="#/lista/${l.id}" data-link>
-          <img src="${l.image}" alt="" />
-          <div><div class="sr-title">${l.title}</div><div class="sr-sub">Lista de produtos</div></div>
-        </a>
-      `).join("");
-    }
-  }
-  searchResults.innerHTML = html;
-  searchResults.classList.add("open");
-
-  searchResults.querySelectorAll("[data-goto]").forEach(b => {
-    b.addEventListener("click", () => {
-      openModal(b.dataset.goto);
-      fecharSearch();
-    });
-  });
-  searchResults.querySelectorAll("[data-link]").forEach(a => a.addEventListener("click", fecharSearch));
-}
-function fecharSearch(){
-  searchResults.classList.remove("open");
-  if(searchInput) searchInput.value = "";
-  if(searchClear) searchClear.classList.remove("show");
-}
-if(searchInput){
-  searchInput.addEventListener("input", (e) => {
-    const v = e.target.value;
-    searchClear.classList.toggle("show", v.length > 0);
-    renderSearchResults(v);
-  });
-  searchInput.addEventListener("keydown", (e) => { if(e.key === "Escape") fecharSearch(); });
-}
-if(searchClear){
-  searchClear.addEventListener("click", () => {
-    searchInput.value = ""; searchClear.classList.remove("show");
-    fecharSearch(); searchInput.focus();
-  });
-}
-document.addEventListener("click", (e) => {
-  if(!e.target.closest(".search-wrap") && !e.target.closest("#searchResults")){
-    if(searchResults && searchResults.classList.contains("open")) fecharSearch();
-  }
-});
-
-/* botão de busca mobile: foca o input do topo (fora de tela em mobile) */
-$("#mobileSearchBtn").addEventListener("click", () => {
-  if(searchInput){ searchInput.focus(); searchInput.scrollIntoView({behavior:"smooth", block:"center"}); }
-});
-/* mostrar botão de busca mobile */
-if(window.matchMedia("(max-width: 899px)").matches){
-  $("#mobileSearchBtn").style.display = "grid";
-}
-
-/* ============================================ */
-/* CONTATO */
-$("#contatoForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const nome = $("#contatoNome").value.trim();
-  const email = $("#contatoEmail").value.trim();
-  const msg = $("#contatoMensagem").value.trim();
-  if(!nome || !email || !msg){ showToast("Preencha todos os campos."); return; }
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast("Digite um e-mail válido."); return; }
-  // mailto fallback (protótipo sem backend)
-  const s = encodeURIComponent("HairOS · Mensagem de " + nome);
-  const b = encodeURIComponent("Nome: " + nome + "\nE-mail: " + email + "\n\nMensagem:\n" + msg);
-  window.location.href = "mailto:hairbymarciostylist@gmail.com?subject=" + s + "&body=" + b;
-  showToast("Abrindo seu e-mail...");
-});
-
-/* ============================================ */
-/* SHINE DOS CARDS */
 (function(){
-  if(!(window.CSS && CSS.registerProperty)) return;
-  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var DUR = 2600;
-  function visiveis(){
-    var vh = window.innerHeight, out = [];
-    document.querySelectorAll("#catalogo .card:not(.shine)").forEach(function(c){
-      var r = c.getBoundingClientRect();
-      if(r.width > 0 && r.bottom > 60 && r.top < vh - 60 && !c.matches(":hover")) out.push(c);
+  "use strict";
+
+  /* ============ UTILS ============ */
+  const $  = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
+  const normalize = s => (s || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const on = (el, ev, fn) => { if (el) el.addEventListener(ev, fn); };
+
+  /* ============ IMAGENS ============ */
+  const U = (id, w) => "https://images.unsplash.com/photo-" + id + "?w=" + (w || 900) + "&q=80&auto=format&fit=crop";
+  const IMG = {
+    hero: U("1560066984-138dadb4c035", 1200),
+    cortes: U("1522337360788-8b13dee7a37e"),
+    coloracao: U("1519699047748-de8e457a634e"),
+    penteados: U("1595476108010-b4d1f102b1b1"),
+    noivas: U("1595959183082-7b570b7e08e2"),
+    produtos: U("1522338242992-e1a54906a8da"),
+    ferramentas: U("1521590832167-7bcbfaa6381f"),
+    marcas: U("1607779097040-26e80aa78e66"),
+    recomendacoes: U("1487412947147-5cebf100ffc2")
+  };
+  const FALLBACK = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600"><rect fill="#1a1612" width="400" height="600"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Georgia,serif" font-style="italic" font-size="64" fill="#d9bb90">H</text></svg>');
+
+  /* ============ DADOS ============ */
+  const categories = [
+    { id:"cortes", name:"Cortes", desc:"Referências femininas em 3 ângulos.", img:IMG.cortes, route:"#/cortes" },
+    { id:"coloracao", name:"Coloração", desc:"Loiros, ruivos, mechas e balayage.", img:IMG.coloracao, route:"#/coloracao" },
+    { id:"penteados", name:"Penteados", desc:"Coques, tranças e semipresos.", img:IMG.penteados, route:"#/penteados" },
+    { id:"noivas", name:"Noivas", desc:"Penteados e acessórios delicados.", img:IMG.noivas, route:"#/noivas" },
+    { id:"produtos", name:"Produtos", desc:"Tratamento, finalizadores e kits.", img:IMG.produtos, route:"#/produtos" },
+    { id:"ferramentas", name:"Ferramentas", desc:"Secadores, pranchas e escovas.", img:IMG.ferramentas, route:"#/ferramentas" },
+    { id:"marcas", name:"Marcas", desc:"Curadoria de marcas profissionais.", img:IMG.marcas, route:"#/marcas" },
+    { id:"recomendacoes", name:"Recomendações", desc:"Curadoria pessoal do Márcio.", img:IMG.recomendacoes, route:"#/recomendacoes" }
+  ];
+
+  const brands = [
+    { id:"keune", name:"Keune" },
+    { id:"loreal-expert", name:"L'Oréal Expert" },
+    { id:"loreal", name:"L'Oréal" },
+    { id:"joico", name:"Joico" },
+    { id:"schwarzkopf", name:"Schwarzkopf" },
+    { id:"living-proof", name:"Living Proof" },
+    { id:"davines", name:"Davines" },
+    { id:"kerastase", name:"Kérastase" },
+    { id:"mac", name:"MAC" },
+    { id:"igora-royal", name:"Igora Royal" },
+    { id:"moroccanoil", name:"Moroccanoil" }
+  ];
+
+  const affiliateLists = [
+    { id:"kit-keune", title:"Kit Keune", category:"Keune", image:IMG.coloracao, affiliateUrl:"", description:"Produtos profissionais Keune selecionados." },
+    { id:"kit-loreal-expert", title:"Kit L'Oréal Expert", category:"L'Oréal Expert", image:IMG.coloracao, affiliateUrl:"", description:"Linha profissional L'Oréal Expert." },
+    { id:"kit-loreal", title:"Kit L'Oréal", category:"L'Oréal", image:IMG.coloracao, affiliateUrl:"", description:"Produtos L'Oréal para cuidados capilares." },
+    { id:"kit-joico", title:"Kit Joico", category:"Joico", image:IMG.produtos, affiliateUrl:"", description:"Tratamentos e finalizadores Joico." },
+    { id:"kit-schwarzkopf", title:"Kit Schwarzkopf", category:"Schwarzkopf", image:IMG.coloracao, affiliateUrl:"", description:"Coloração e tratamento Schwarzkopf." },
+    { id:"kit-living-proof", title:"Kit Living Proof", category:"Living Proof", image:IMG.produtos, affiliateUrl:"", description:"Living Proof — ciência capilar." },
+    { id:"kit-davines", title:"Kit Davines", category:"Davines", image:IMG.produtos, affiliateUrl:"", description:"Beleza sustentável Davines." },
+    { id:"ferramentas-lista", title:"Ferramentas", category:"Ferramentas", image:IMG.ferramentas, affiliateUrl:"", description:"Secadores, pranchas e modeladores." },
+    { id:"kit-kerastase", title:"Kit Kérastase", category:"Kérastase", image:IMG.produtos, affiliateUrl:"", description:"Cuidado premium Kérastase." },
+    { id:"kit-mac", title:"Kit MAC", category:"MAC", image:IMG.produtos, affiliateUrl:"", description:"Maquiagem profissional MAC." },
+    { id:"kit-noiva", title:"Kit Noiva", category:"Noivas", image:IMG.noivas, affiliateUrl:"", description:"Produtos e acessórios para noivas." },
+    { id:"kit-igora-royal", title:"Kit Igora Royal", category:"Igora Royal", image:IMG.coloracao, affiliateUrl:"", description:"Coloração profissional Igora Royal." },
+    { id:"kit-moroccanoil", title:"Kit Moroccanoil", category:"Moroccanoil", image:IMG.produtos, affiliateUrl:"", description:"Óleos e tratamentos Moroccanoil." },
+    { id:"minhas-recomendacoes", title:"Minhas Recomendações", category:"Curadoria", image:IMG.recomendacoes, affiliateUrl:"", description:"Curadoria pessoal do Márcio Maker." }
+  ];
+
+  const inspirations = [
+    { id:"c1", cat:"cortes", title:"Velvet", desc:"Bob ondulado na altura do queixo, com franja reta desfiada.",
+      descricoes:{ frente:"De frente, o corte médio na altura do queixo emoldura o rosto com suavidade. A franja reta levemente desfiada suaviza a testa.", lado:"De perfil, o comprimento na altura do queixo valoriza o contorno do rosto.", atras:"Visto de costas, camadas bem distribuídas dão movimento às ondas." },
+      tags:["bob","ondulado","queixo"],
+      img:{ frente: U("1492106087820-71f1a00d2b11"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Leave-In Elixir Ultime — Kérastase", razao:"Define as ondas do bob sem pesar" },
+        { nome:"Máscara Intensa — Joico", razao:"Hidratação profunda para as pontas" },
+        { nome:"Babyliss Cerâmica — Ferramentas", razao:"Modela as ondas com calor uniforme" }
+      ]},
+    { id:"c2", cat:"cortes", title:"Pixie Texturizado", desc:"Pixie com topo volumoso e franja lateral jogada.",
+      descricoes:{ frente:"Franja jogada de lado e topo volumoso alongam o rosto com leveza.", lado:"Camadas estratégicas criam efeito bagunçado proposital.", atras:"Mantém volume e textura na nuca com acabamento em degradê." },
+      tags:["curto","pixie","textura"],
+      img:{ frente: U("1503443207922-dff7d543fd0e"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Sérum Pro Longer — L'Oréal Expert", razao:"Fortalece os fios curtos e dá brilho" },
+        { nome:"Shampoo Moisture Recovery — Joico", razao:"Hidratação leve que mantém o volume" },
+        { nome:"Difusor Universal — Ferramentas", razao:"Espalha o calor por igual" }
+      ]},
+    { id:"c3", cat:"cortes", title:"Butterfly Cut", desc:"Camadas longas com ondas soltas — efeito borboleta.",
+      descricoes:{ frente:"Franja cortina abre o rosto e camadas longas criam volume.", lado:"Camadas longas caem em movimento sobre os ombros.", atras:"Camadas sobrepostas garantem volume no topo." },
+      tags:["longo","camadas","butterfly"],
+      img:{ frente: U("1519699047748-de8e457a634e"), lado: U("1522337360788-8b13dee7a37e"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Leave-In Elixir Ultime — Kérastase", razao:"Define as ondas longas sem pesar" },
+        { nome:"Máscara Intensa — Joico", razao:"Hidratação profunda para as pontas" },
+        { nome:"Babyliss Cerâmica — Ferramentas", razao:"Modela as ondas longas" }
+      ]},
+    { id:"c4", cat:"cortes", title:"Italian Bob", desc:"Bob ondulado na altura do queixo com franja lateral.",
+      descricoes:{ frente:"Franja lateral jogada e ondas texturizadas emolduram o rosto.", lado:"Ondas naturais caem suavemente criando movimento.", atras:"Ondas uniformes e camadas bem distribuídas garantem movimento." },
+      tags:["bob","ondulado","mel"],
+      img:{ frente: U("1522337360788-8b13dee7a37e"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Modelador Curves — Ferramentas", razao:"Cria as ondas soltas do bob" },
+        { nome:"Leave-In Elixir Ultime — Kérastase", razao:"Sela as ondas e dá brilho" },
+        { nome:"Máscara Nutrioil — L'Oréal Expert", razao:"Nutre as camadas sem perder movimento" }
+      ]},
+    { id:"co1", cat:"coloracao", title:"Loiro Mel", desc:"Loiro quente com mechas mel e iluminado.",
+      descricoes:{ frente:"Loiro quente com mechas mel iluminadas emolduram o rosto.", lado:"Mechas estratégicas criam profundidade ao longo do comprimento.", atras:"Mechas bem distribuídas garantem caimento iluminado." },
+      tags:["loiro","mel","mechas"],
+      img:{ frente: U("1519699047748-de8e457a634e"), lado: U("1522337360788-8b13dee7a37e"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Shampoo Blond Absolu — Kérastase", razao:"Mantém o loiro frio e iluminado" },
+        { nome:"Máscara Blond Absolu — Kérastase", razao:"Nutre e sela as cutículas" },
+        { nome:"Leave-In Nutritive — L'Oréal Expert", razao:"Protege o loiro do calor" }
+      ]},
+    { id:"co2", cat:"coloracao", title:"Ruivo Cobre", desc:"Ruivo intenso com reflexos cobre.",
+      descricoes:{ frente:"Ruivo intenso com reflexos cobre que criam profundidade.", lado:"Mechas cobre estratégicas garantem dimensão.", atras:"Caimento uniforme com brilho cobre intenso." },
+      tags:["ruivo","cobre","intenso"],
+      img:{ frente: U("1605980776566-0486c3ac7617"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Shampoo Reflection — L'Oréal Expert", razao:"Preserva o ruivo vibrante" },
+        { nome:"Máscara Reflection — L'Oréal Expert", razao:"Sela a cutícula e intensifica o brilho" },
+        { nome:"Leave-In Vitamino Color — L'Oréal Expert", razao:"Protege o ruivo do desbotamento" }
+      ]},
+    { id:"co3", cat:"coloracao", title:"Balayage Natural", desc:"Degradê suave com transição natural.",
+      descricoes:{ frente:"Degradê suave que ilumina a parte frontal.", lado:"Mechas estratégicas caem em iluminado natural.", atras:"Transição suave e mechas bem distribuídas." },
+      tags:["balayage","degradê","natural"],
+      img:{ frente: U("1595476108010-b4d1f102b1b1"), lado: U("1519699047748-de8e457a634e"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Shampoo Blond Absolu — Kérastase", razao:"Mantém o balayage luminoso" },
+        { nome:"Óleo Elixir Ultime — Kérastase", razao:"Sela as pontas iluminadas" },
+        { nome:"Máscara Nutritive — L'Oréal Expert", razao:"Nutre a transição natural" }
+      ]},
+    { id:"p1", cat:"penteados", title:"Coque Baixo Elegante", desc:"Coque baixo com fios soltos para um look sofisticado.",
+      descricoes:{ frente:"Coque baixo com fios soltos ao redor do rosto.", lado:"Fios soltos emoldaram a lateral e o coque baixo.", atras:"Coque baixo bem estruturado com textura suave." },
+      tags:["coque","baixo","elegante"],
+      img:{ frente: U("1595476108010-b4d1f102b1b1"), lado: U("1522337360788-8b13dee7a37e"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Spray Fixador — Keune", razao:"Mantém o coque no lugar o dia todo" },
+        { nome:"Sérum Discipline — Kérastase", razao:"Controla frizz e mantém acabamento" },
+        { nome:"Escova de Cerdas Naturais — Ferramentas", razao:"Alinha os fios antes de prender" }
+      ]},
+    { id:"p2", cat:"penteados", title:"Trança Lateral", desc:"Trança lateral suave com textura natural.",
+      descricoes:{ frente:"Trança lateral suave com fios soltos emoldurando.", lado:"Trança desconstruída com textura natural.", atras:"Trança lateral bem distribuída com acabamento natural." },
+      tags:["trança","lateral","natural"],
+      img:{ frente: U("1522337360788-8b13dee7a37e"), lado: U("1580618672591-eb180b1a973f"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Texturizador Surf Spray — Keune", razao:"Dá textura e movimento à trança" },
+        { nome:"Leave-In Ondas — Joico", razao:"Define as ondas dos fios soltos" },
+        { nome:"Escova Modeladora — Ferramentas", razao:"Alinha os fios antes de trançar" }
+      ]},
+    { id:"n1", cat:"noivas", title:"Noiva Clássica", desc:"Coque clássico com véu e acessório delicado.",
+      descricoes:{ frente:"Coque clássico com fios soltos emoldurando.", lado:"Fios soltos na lateral e coque estruturado.", atras:"Coque clássico bem estruturado, com véu." },
+      tags:["noiva","clássico","véu"],
+      img:{ frente: U("1595959183082-7b570b7e08e2"), lado: U("1595476108010-b4d1f102b1b1"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Spray Fixador — Keune", razao:"Fixa o coque por horas" },
+        { nome:"Óleo Elixir Ultime — Kérastase", razao:"Brilho impecável no dia do casamento" },
+        { nome:"Máscara Nutritive — L'Oréal Expert", razao:"Prepara os fios antes do grande dia" }
+      ]},
+    { id:"pr1", cat:"produtos", title:"Máscara Reconstrutora", desc:"Máscara de tratamento intensivo para fios danificados.",
+      descricoes:{ frente:"Máscara reconstrutora com ação intensiva.", lado:"Nutrição profunda e reconstrução da fibra.", atras:"Fios mais fortes, macios e com brilho saudável." },
+      tags:["máscara","tratamento"],
+      img:{ frente: U("1522338242992-e1a54906a8da"), lado: U("1608248543803-ba4f8c70ae0b"), atras: U("1522337660859-02fbefca4702") },
+      kit:[
+        { nome:"Máscara Intensa — Joico", razao:"Reconstrução profunda da fibra" },
+        { nome:"Condicionador Resistance — Kérastase", razao:"Complementa a hidratação" }
+      ]},
+    { id:"f1", cat:"ferramentas", title:"Prancha Profissional", desc:"Prancha de cerâmica para alisamento e modelagem.",
+      descricoes:{ frente:"Prancha com placas de cerâmica.", lado:"Ideal para alisamento e ondas.", atras:"Fios lisos com brilho e sem danificar." },
+      tags:["prancha","profissional"],
+      img:{ frente: U("1521590832167-7bcbfaa6381f"), lado: U("1522337660859-02fbefca4702"), atras: U("1522337360788-8b13dee7a37e") },
+      kit:[
+        { nome:"Prancha Cerâmica — Ferramentas", razao:"Calor uniforme sem danificar" },
+        { nome:"Protetor Térmico — Keune", razao:"Protege os fios do calor" }
+      ]}
+  ];
+
+  const ANGULOS = { frente:"Frente", lado:"Lado", atras:"Atrás" };
+  const ORDEM_ANGULOS = ["frente","lado","atras"];
+  const filtersByCat = {
+    cortes: ["Todos","Bob","Pixie","Longo"],
+    coloracao: ["Todos","Loiro","Ruivo","Balayage"],
+    penteados: ["Todos","Coque","Trança"],
+    noivas: ["Todos","Clássico"],
+    produtos: ["Todos","Tratamento"],
+    ferramentas: ["Todos","Prancha"]
+  };
+
+  /* ============ ESTADO ============ */
+  let currentRoute = "#/";
+  let activeFilter = "Todos";
+  let inspAtual = null;
+  let anguloAtual = 0;
+  let ultimoFoco = null;
+  let zoomAtivo = false;
+  let panX = 0, panY = 0, panStartX = 0, panStartY = 0, panOrigX = 0, panOrigY = 0, arrastandoImg = false;
+
+  /* ============ FAVORITOS ============ */
+  const FAV_KEY = "hairos_favoritos";
+  function getFavs(){ try{ return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }catch(e){ return []; } }
+  function setFavs(a){ try{ localStorage.setItem(FAV_KEY, JSON.stringify(a)); }catch(e){} }
+  function isFav(id){ return getFavs().indexOf(id) !== -1; }
+  function toggleFav(id){
+    const a = getFavs();
+    const i = a.indexOf(id);
+    if (i === -1) a.push(id); else a.splice(i,1);
+    setFavs(a);
+    updateFavBadges();
+    return a.indexOf(id) !== -1;
+  }
+  function updateFavBadges(){
+    const n = getFavs().length;
+    const top = $("#favBadgeTop"), bot = $("#favBadgeBottom");
+    if(top){ top.textContent = n; top.parentElement.classList.toggle("has-fav", n>0); }
+    if(bot){ bot.textContent = n; bot.parentElement.classList.toggle("has-fav", n>0); }
+  }
+
+  /* ============ GETTERS ============ */
+  const getCatById = id => categories.find(c => c.id === id);
+  const getBrandById = id => brands.find(b => b.id === id);
+  const getAffiliateById = id => affiliateLists.find(a => a.id === id);
+
+  /* ============ TOAST ============ */
+  let toastTimer = null;
+  function showToast(msg){
+    const t = $("#toast");
+    if(!t) return;
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+  }
+
+  /* ============ IMG FALLBACK ============ */
+  function aplicarFallback(img){
+    if(!img) return;
+    img.onerror = function(){ if(this.src !== FALLBACK) this.src = FALLBACK; };
+  }
+
+  /* ============ RENDER HELPERS ============ */
+  function categoryCard(cat){
+    return '<a class="cat-card" href="' + cat.route + '" aria-label="' + cat.name + '">'
+      + '<img src="' + cat.img + '" alt="' + cat.name + '" loading="lazy" />'
+      + '<div class="cat-card-body"><h3>' + cat.name + '</h3><p>' + cat.desc + '</p>'
+      + '<span class="arrow">Ver →</span></div></a>';
+  }
+
+  function brandCard(b){
+    return '<a class="brand-card" href="#/marcas/' + b.id + '">' + b.name + '</a>';
+  }
+
+  function inspCard(insp){
+    const fav = isFav(insp.id);
+    const img = insp.img.frente || insp.img;
+    return '<article class="card" data-insp="' + insp.id + '" tabindex="0" role="button" aria-label="Ver ' + insp.title + '">'
+      + '<div class="card-inner">'
+      + '<img class="h-md" src="' + img + '" alt="' + insp.title + '" loading="lazy" onload="this.classList.add(\'carregada\')" />'
+      + '<div class="card-label">' + insp.title + ' <span class="angle">Frente</span></div>'
+      + '<div class="card-actions">'
+      + '<button type="button" class="card-action fav ' + (fav?'on':'') + '" data-fav="' + insp.id + '" aria-pressed="' + fav + '" aria-label="' + (fav?'Remover dos favoritos':'Adicionar aos favoritos') + '">'
+      + '<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 2.7 5 6.1 5c2.1 0 3.6 1.2 4.4 2.5h3C14.3 6.2 15.8 5 17.9 5c3.4 0 5.2 3.4 3.7 6.8C19.5 16.4 12 21 12 21z"/></svg>'
+      + '</button>'
+      + '<button type="button" class="card-action share" data-share="' + insp.id + '" aria-label="Compartilhar">'
+      + '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>'
+      + '</button></div></div></article>';
+  }
+
+  function renderListHero(list){
+    return '<div class="list-hero">'
+      + '<div class="list-hero-media"><img src="' + list.image + '" alt="' + list.title + '" /></div>'
+      + '<div class="list-hero-body">'
+      + '<span class="eyebrow">' + list.category + '</span>'
+      + '<h2>' + list.title + '</h2>'
+      + '<p>' + list.description + '</p>'
+      + '<div class="list-meta">'
+      + '<span>Em curadoria</span>'
+      + '<span>Afiliado Mercado Livre</span>'
+      + '</div>'
+      + (list.affiliateUrl
+          ? '<a class="btn btn-primary" href="' + list.affiliateUrl + '" target="_blank" rel="noopener noreferrer nofollow sponsored">Ver lista no Mercado Livre</a>'
+          : '<div class="pending-badge">⚠ Link de afiliado pendente de configuração</div>')
+      + '</div></div>';
+  }
+
+  /* ============ VIEWS ============ */
+  function renderHome(){
+    const recommended = affiliateLists.filter(a => ["Kit Joico","Kit Kérastase","Ferramentas"].indexOf(a.category) !== -1).slice(0,3);
+    return '<div class="view">'
+      + '<section class="hero">'
+      + '<span class="hero-eyebrow">Inspiração • Visagismo • Você</span>'
+      + '<h1 class="hero-title">Descubra o seu <em>próximo visual</em>.</h1>'
+      + '<p class="hero-sub">Cortes, colorações, penteados e inspirações profissionais para valorizar sua beleza e expressar sua identidade.</p>'
+      + '<div class="hero-ctas">'
+      + '<a class="btn btn-primary" href="#/categorias">Explorar categorias</a>'
+      + '<a class="btn btn-outline" href="#/cortes">Ver cortes</a>'
+      + '</div></section>'
+      + '<div class="hero-media-wrap"><img src="' + IMG.hero + '" alt="Modelo com cabelo em destaque" />'
+      + '<div class="hero-media-label"><span class="eyebrow">Destaque</span><h2>Elegância em cada ângulo.</h2></div></div>'
+      + '<section class="section"><div class="benefits">'
+      + '<div class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><div><b>Inspirações organizadas</b><span>Por categoria e ângulo.</span></div></div>'
+      + '<div class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><div><b>Conteúdo de visagismo</b><span>Formato e estilo.</span></div></div>'
+      + '<div class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg><div><b>Listas profissionais</b><span>Curadoria de produtos.</span></div></div>'
+      + '<div class="benefit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg><div><b>Em qualquer tela</b><span>Mobile, tablet e desktop.</span></div></div>'
+      + '</div></section>'
+      + '<section class="section"><div class="section-head"><div>'
+      + '<span class="eyebrow">Categorias</span><h2>Explore por inspiração</h2>'
+      + '<p class="lead">Cortes, coloração, penteados, noivas, produtos e ferramentas.</p>'
+      + '</div><a class="link-more" href="#/categorias">Ver todas →</a></div>'
+      + '<div class="grid-cat">' + categories.slice(0,6).map(categoryCard).join('') + '</div></section>'
+      + '<section class="section"><div class="section-head"><div>'
+      + '<span class="eyebrow">Marcas</span><h2>Marcas profissionais</h2>'
+      + '<p class="lead">Curadoria de marcas que respeitamos no universo da beleza.</p>'
+      + '</div><a class="link-more" href="#/marcas">Ver todas →</a></div>'
+      + '<div class="grid-brand">' + brands.slice(0,8).map(brandCard).join('') + '</div></section>'
+      + '<section class="section"><div class="section-head"><div>'
+      + '<span class="eyebrow">Curadoria</span><h2>Minhas Recomendações</h2>'
+      + '<p class="lead">Kits e ferramentas escolhidos a dedo.</p>'
+      + '</div><a class="link-more" href="#/recomendacoes">Ver tudo →</a></div>'
+      + '<div class="grid-rec">' + recommended.map(r => (
+          '<a class="rec-card" href="#/lista/' + r.id + '">'
+          + '<img src="' + r.image + '" alt="' + r.title + '" loading="lazy" />'
+          + '<div class="rec-card-body"><span class="eyebrow">' + r.category + '</span>'
+          + '<h3>' + r.title + '</h3><p>' + r.description + '</p></div></a>'
+        )).join('') + '</div></section>'
+      + '<div class="footer-mini">HairOS · <span class="gold">Salve o corte · Compre o kit · Mantenha o visual</span>'
+      + '<div class="footer-links"><a href="#/sobre">Sobre</a><a href="#/contato">Contato</a><a href="#/privacidade">Privacidade</a><a href="#/termos">Termos</a></div></div>'
+      + '</div>';
+  }
+
+  function renderCategorias(){
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Categorias</h1><span class="divider"></span>'
+      + '<div class="sub">Explore por<br><span class="highlight">inspiração</span></div></div>'
+      + '<section class="section"><div class="grid-cat">' + categories.map(categoryCard).join('') + '</div></section>'
+      + '<div class="footer-mini">HairOS · <span class="gold">Todas as categorias</span></div></div>';
+  }
+
+  function renderCategoryPage(catId){
+    const cat = getCatById(catId);
+    if(!cat) return renderNotFound();
+    const filters = filtersByCat[catId] || ["Todos"];
+    const list = inspirations.filter(i => i.cat === catId);
+    const filtered = activeFilter === "Todos" ? list : list.filter(i => {
+      if (normalize(i.title).indexOf(normalize(activeFilter)) !== -1) return true;
+      return i.tags.some(t => normalize(t).indexOf(normalize(activeFilter)) !== -1);
     });
-    return out;
+    const chips = '<div class="chips-carousel"><div class="chips" role="tablist" aria-label="Filtrar ' + cat.name + '">'
+      + filters.map(f => '<button type="button" class="chip" data-filter="' + f + '" aria-pressed="' + (f===activeFilter) + '">' + f + '</button>').join('')
+      + '</div></div>';
+    const titleBlock = '<div class="page-title"><h1>' + cat.name + '</h1><span class="divider"></span>'
+      + '<div class="sub">' + cat.desc + '</div></div>';
+    const grid = filtered.length
+      ? '<div id="catalogo">' + filtered.map(inspCard).join('') + '</div>'
+      : '<div class="empty-state"><div class="icon">♡</div><div class="title">Nada por aqui</div><div class="sub">Tente outro filtro.</div></div>';
+    return '<div class="view">' + chips + titleBlock + grid
+      + '<div class="footer-mini">HairOS · <span class="gold">' + cat.name + '</span></div></div>';
   }
-  function brilhar(){
-    if(document.hidden || !document.body.classList.contains("app-pronta")) return;
-    if(document.body.style.overflow === "hidden") return;
-    var l = visiveis();
-    if(!l.length) return;
-    var c = l[Math.floor(Math.random() * l.length)];
-    c.classList.add("shine");
-    setTimeout(function(){ c.classList.remove("shine"); }, DUR);
+
+  function renderMarcas(){
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Marcas</h1><span class="divider"></span>'
+      + '<div class="sub">Marcas profissionais<br><span class="highlight">de beleza</span></div></div>'
+      + '<section class="section"><div class="grid-brand">' + brands.map(brandCard).join('') + '</div></section>'
+      + '<div class="footer-mini">HairOS · <span class="gold">Curadoria de marcas</span></div></div>';
   }
-  setInterval(brilhar, 2400);
-})();
 
-/* ============================================ */
-/* INIT */
-function initApp(){
-  window.addEventListener("hashchange", router);
-  if(!location.hash) location.hash = "#/";
-  router();
-  updateFavBadges();
+  function renderMarca(id){
+    const brand = getBrandById(id);
+    if(!brand) return renderNotFound();
+    const list = affiliateLists.find(a => a.category === brand.name);
+    const relatedInsp = inspirations.slice(0,4);
+    return '<div class="view">'
+      + '<div class="page-title"><h1>' + brand.name + '</h1><span class="divider"></span>'
+      + '<div class="sub">Curadoria HairOS<br><span class="highlight">' + brand.name + '</span></div></div>'
+      + (list ? renderListHero(list) : '<div style="text-align:center;margin-bottom:24px"><div class="pending-badge" style="display:inline-flex">Em curadoria</div></div>')
+      + '<section class="section"><div class="section-head"><h2>Inspirações relacionadas</h2></div>'
+      + '<div id="catalogo">' + relatedInsp.map(inspCard).join('') + '</div></section>'
+      + '<div class="footer-mini">HairOS · <span class="gold">' + brand.name + '</span></div></div>';
+  }
 
-  // Loading
-  const ls = $("#loadingScreen"), ll = $("#loadingLogo"), lb = $("#loadingBar"),
-        lbc = $("#loadingBarContainer"), lp = $("#loadingPercent"), lt = $("#loadingText"),
-        mc = $("#mainContent");
-  function finish(){
-    if(lbc) lbc.style.opacity = "0";
-    if(lt) lt.style.opacity = "0";
-    if(lp) lp.style.opacity = "0";
-    setTimeout(() => ll.classList.add("zoom-out"), 300);
-    setTimeout(() => {
-      ls.classList.add("hidden");
-      mc.classList.add("visible");
+  function renderRecomendacoes(){
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Minhas Recomendações</h1><span class="divider"></span>'
+      + '<div class="sub">Curadoria pessoal<br><span class="highlight">do Márcio</span></div></div>'
+      + '<section class="section"><div class="grid-rec">'
+      + affiliateLists.map(r => (
+          '<a class="rec-card" href="#/lista/' + r.id + '">'
+          + '<img src="' + r.image + '" alt="' + r.title + '" loading="lazy" />'
+          + '<div class="rec-card-body"><span class="eyebrow">' + r.category + '</span>'
+          + '<h3>' + r.title + '</h3><p>' + r.description + '</p></div></a>'
+        )).join('')
+      + '</div></section>'
+      + '<div class="footer-mini">HairOS · <span class="gold">14 listas de afiliado</span></div></div>';
+  }
+
+  function renderListaDetalhe(id){
+    const list = getAffiliateById(id);
+    if(!list) return renderNotFound();
+    return '<div class="view">'
+      + '<div class="page-title"><h1>' + list.title + '</h1><span class="divider"></span>'
+      + '<div class="sub">Lista de produtos<br><span class="highlight">' + list.category + '</span></div></div>'
+      + renderListHero(list)
+      + '<section class="section" style="max-width:640px;margin:0 auto">'
+      + '<p style="font-size:.88rem;color:var(--text-muted);font-weight:300;line-height:1.75;text-align:center">Esta é uma lista de produtos selecionados com cuidado para facilitar sua pesquisa. Ao clicar no botão (quando configurado), você será direcionado ao Mercado Livre em uma nova aba.</p>'
+      + '</section>'
+      + '<div class="footer-mini">HairOS · <span class="gold">' + list.title + '</span></div></div>';
+  }
+
+  function renderFavoritos(){
+    const favs = getFavs();
+    const items = inspirations.filter(i => favs.indexOf(i.id) !== -1);
+    const grid = items.length
+      ? '<div id="catalogo">' + items.map(inspCard).join('') + '</div>'
+      : '<div class="empty-state"><div class="icon">♡</div><div class="title">Nenhum favorito ainda</div><div class="sub">Toque no ♡ de um card para salvá-lo aqui.</div><a class="btn btn-outline" href="#/categorias">Explorar categorias</a></div>';
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Favoritos</h1><span class="divider"></span>'
+      + '<div class="sub">Suas inspirações<br><span class="highlight">salvas</span></div></div>'
+      + grid
+      + '<div class="footer-mini">HairOS · <span class="gold">Favoritos salvos localmente</span></div></div>';
+  }
+
+  function renderSobre(){
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Sobre</h1><span class="divider"></span>'
+      + '<div class="sub">A ideia por trás<br><span class="highlight">do HairOS</span></div></div>'
+      + '<div class="sobre-conteudo">'
+      + '<div class="sobre-marca">H</div><span class="sobre-tag">HairOS</span>'
+      + '<p>O <span class="gold">HairOS</span> nasceu de uma ideia simples: escolher um corte de cabelo não deveria ser um chute.</p>'
+      + '<p>Aqui você encontra <span class="gold">referências organizadas por ângulo</span> — frente, lado e atrás — para mostrar exatamente o que quer.</p>'
+      + '<span class="sobre-fio"></span>'
+      + '<p>Não vendemos produtos. Indicamos os que fazem sentido, com link direto. Se você comprar por um desses links, podemos receber uma comissão — <span class="gold">sem nenhum custo extra para você</span>.</p>'
+      + '<p>O objetivo é um só: <span class="gold">você sair do salão sabendo exatamente como manter o visual</span>.</p>'
+      + '</div>'
+      + '<div class="footer-mini">HairOS · <span class="gold">Márcio Maker · Beauty Tech</span></div></div>';
+  }
+
+  function renderContato(){
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Contato</h1><span class="divider"></span>'
+      + '<div class="sub">Fale com<br><span class="highlight">o HairOS</span></div></div>'
+      + '<div class="contato-conteudo">'
+      + '<div class="contato-intro"><p>Dúvidas, sugestões de cortes, parcerias — envie uma mensagem.</p>'
+      + '<div class="contato-email-inline"><span>✉</span> hairbymarciostylist@gmail.com</div></div>'
+      + '<div class="contato-form-section"><div class="contato-form-eyebrow">mensagem</div>'
+      + '<form class="contato-form" id="contatoForm" novalidate>'
+      + '<div class="contato-form-row">'
+      + '<div class="contato-field"><label for="contatoNome">nome</label>'
+      + '<input type="text" id="contatoNome" placeholder="seu nome" autocomplete="name"></div>'
+      + '<div class="contato-field"><label for="contatoEmail">e-mail</label>'
+      + '<input type="email" id="contatoEmail" placeholder="seu@email.com" autocomplete="email"></div>'
+      + '</div>'
+      + '<div class="contato-field"><label for="contatoMensagem">mensagem</label>'
+      + '<textarea id="contatoMensagem" placeholder="Escreva sua mensagem..."></textarea></div>'
+      + '<button type="submit">enviar mensagem</button>'
+      + '</form></div></div>'
+      + '<div class="footer-mini">HairOS · <span class="gold">Respondemos em até 24h</span></div></div>';
+  }
+
+  function renderInstitucional(type){
+    const map = {
+      privacidade: {
+        title: "Política de Privacidade",
+        body: '<p>O HairOS valoriza sua privacidade. Este protótipo não coleta dados pessoais. Favoritos são armazenados apenas no seu navegador via localStorage.</p>'
+          + '<ul><li>Nenhuma conta é necessária.</li><li>Nenhum dado é enviado a servidores.</li><li>Links afiliados serão claramente sinalizados.</li></ul>'
+      },
+      termos: {
+        title: "Termos de Uso",
+        body: '<p>Ao utilizar o HairOS você concorda com os seguintes termos:</p>'
+          + '<ul><li>O conteúdo é oferecido para fins informativos.</li><li>Imagens são provenientes do Unsplash para demonstração.</li><li>Links de afiliados podem gerar comissão sem custo adicional.</li><li>Recomendações não substituem avaliação profissional.</li></ul>'
+      }
+    };
+    const info = map[type] || map.privacidade;
+    return '<div class="view">'
+      + '<div class="page-title"><h1>' + info.title + '</h1><span class="divider"></span></div>'
+      + '<div class="sobre-conteudo">' + info.body + '</div>'
+      + '<div class="footer-mini">HairOS · <span class="gold">' + info.title + '</span></div></div>';
+  }
+
+  function renderNotFound(){
+    return '<div class="view">'
+      + '<div class="page-title"><h1>Página não encontrada</h1><span class="divider"></span>'
+      + '<div class="sub">O endereço acessado<br><span class="highlight">não existe</span></div></div>'
+      + '<div style="text-align:center;padding:40px 20px"><a class="btn btn-outline" href="#/">Voltar ao início</a></div>'
+      + '<div class="footer-mini">HairOS · <span class="gold">Erro 404</span></div></div>';
+  }
+
+  /* ============ ROUTER ============ */
+  function parseHash(){ return location.hash.replace(/^#/, "") || "/"; }
+
+  function router(){
+    const path = parseHash();
+    currentRoute = "#" + path;
+    activeFilter = "Todos";
+    const app = $("#app");
+    if(!app) return;
+    let html = "";
+    try {
+      if (path === "/" || path === "") html = renderHome();
+      else if (path === "/categorias") html = renderCategorias();
+      else if (path === "/cortes") html = renderCategoryPage("cortes");
+      else if (path === "/coloracao") html = renderCategoryPage("coloracao");
+      else if (path === "/penteados") html = renderCategoryPage("penteados");
+      else if (path === "/noivas") html = renderCategoryPage("noivas");
+      else if (path === "/produtos") html = renderCategoryPage("produtos");
+      else if (path === "/ferramentas") html = renderCategoryPage("ferramentas");
+      else if (path === "/marcas") html = renderMarcas();
+      else if (path.indexOf("/marcas/") === 0) html = renderMarca(path.split("/")[2]);
+      else if (path === "/recomendacoes") html = renderRecomendacoes();
+      else if (path.indexOf("/lista/") === 0) html = renderListaDetalhe(path.split("/")[2]);
+      else if (path === "/favoritos") html = renderFavoritos();
+      else if (path === "/sobre") html = renderSobre();
+      else if (path === "/contato") html = renderContato();
+      else if (path === "/privacidade" || path === "/termos") html = renderInstitucional(path.slice(1));
+      else html = renderNotFound();
+    } catch(err){
+      console.error("Router error:", err);
+      html = '<div class="view"><div class="page-title"><h1>Erro</h1></div><div style="text-align:center;padding:40px"><a class="btn btn-outline" href="#/">Voltar</a></div></div>';
+    }
+    app.innerHTML = html;
+    updateActiveNav();
+    window.scrollTo(0, 0);
+    bindViewEvents();
+    atualizarDockIndicador();
+  }
+
+  function updateActiveNav(){
+    const path = parseHash();
+    let key = "/";
+    if (path === "/categorias" || ["/cortes","/coloracao","/penteados","/noivas","/produtos","/ferramentas"].indexOf(path) !== -1) key = "/categorias";
+    else if (path.indexOf("/marcas") === 0) key = "/marcas";
+    else if (path === "/favoritos") key = "/favoritos";
+    else if (path === "/recomendacoes" || path.indexOf("/lista/") === 0) key = "/recomendacoes";
+
+    $$(".top-nav a").forEach(function(a){
+      const href = a.getAttribute("href");
+      a.classList.toggle("ativo", href === "#" + key || (key === "/" && href === "#/"));
+    });
+    $$(".dock-btn[data-route]").forEach(function(b){
+      const on = b.dataset.route === "#" + key || (key === "/" && b.dataset.route === "#/");
+      b.classList.toggle("ativo", on);
+      if (on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
+    });
+    $$(".drawer-nav button").forEach(function(b){
+      b.classList.toggle("ativo", b.dataset.route === "#" + path);
+    });
+  }
+
+  function atualizarDockIndicador(){
+    const path = currentRoute;
+    let idx = 0;
+    if (path === "#/") idx = 0;
+    else if (path === "#/categorias" || ["#/cortes","#/coloracao","#/penteados","#/noivas","#/produtos","#/ferramentas"].indexOf(path) !== -1) idx = 1;
+    else if (path.indexOf("#/marcas") === 0) idx = 2;
+    else if (path === "#/favoritos") idx = 3;
+    else idx = 4;
+    const dock = $("#dock");
+    if(dock) dock.style.setProperty("--i", idx);
+  }
+
+  /* ============ BIND VIEW EVENTS ============ */
+  function bindViewEvents(){
+    $$(".chip[data-filter]").forEach(function(chip){
+      chip.addEventListener("click", function(){
+        activeFilter = chip.dataset.filter;
+        router();
+      });
+    });
+
+    $$(".card[data-insp]").forEach(function(card){
+      card.addEventListener("click", function(e){
+        if (e.target.closest(".card-action")) return;
+        openModal(card.dataset.insp);
+      });
+      card.addEventListener("keydown", function(e){
+        if (e.key === "Enter" || e.key === " "){ e.preventDefault(); openModal(card.dataset.insp); }
+      });
+      const img = card.querySelector("img");
+      if (img && img.complete) img.classList.add("carregada");
+      aplicarFallback(img);
+    });
+
+    $$(".card-action.fav[data-fav]").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        const id = btn.dataset.fav;
+        const nowFav = toggleFav(id);
+        btn.classList.toggle("on", nowFav);
+        btn.setAttribute("aria-pressed", nowFav);
+        btn.classList.add("pop");
+        setTimeout(function(){ btn.classList.remove("pop"); }, 500);
+        showToast(nowFav ? "Adicionado aos favoritos ♥" : "Removido dos favoritos");
+        if (parseHash() === "/favoritos") router();
+      });
+    });
+
+    $$(".card-action.share[data-share]").forEach(function(btn){
+      btn.addEventListener("click", function(e){
+        e.stopPropagation();
+        const insp = inspirations.find(i => i.id === btn.dataset.share);
+        if (insp) compartilharInsp(insp);
+      });
+    });
+
+    // contato form (só existe quando rota /contato)
+    const form = $("#contatoForm");
+    if (form){
+      form.addEventListener("submit", function(e){
+        e.preventDefault();
+        const nome = ($("#contatoNome") || {}).value || "";
+        const email = ($("#contatoEmail") || {}).value || "";
+        const msg = ($("#contatoMensagem") || {}).value || "";
+        if (!nome.trim() || !email.trim() || !msg.trim()){ showToast("Preencha todos os campos."); return; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showToast("Digite um e-mail válido."); return; }
+        const s = encodeURIComponent("HairOS · Mensagem de " + nome);
+        const b = encodeURIComponent("Nome: " + nome + "\nE-mail: " + email + "\n\nMensagem:\n" + msg);
+        window.location.href = "mailto:hairbymarciostylist@gmail.com?subject=" + s + "&body=" + b;
+        showToast("Abrindo seu e-mail...");
+      });
+    }
+  }
+
+  /* ============ MODAL ============ */
+  function openModal(id){
+    const insp = inspirations.find(i => i.id === id);
+    if (!insp) return;
+    const modal = $("#modal");
+    if (!modal) return;
+    ultimoFoco = document.activeElement;
+    inspAtual = insp;
+    anguloAtual = 0;
+    resetZoom();
+    modal.scrollTop = 0;
+    mostrarAngulo();
+    modal.classList.add("ativo");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    const btnFechar = $("#fecharModal");
+    if (btnFechar) btnFechar.focus();
+  }
+
+  function mostrarAngulo(){
+    if (!inspAtual) return;
+    resetZoom();
+    const angulo = ORDEM_ANGULOS[anguloAtual];
+    const rotulo = ANGULOS[angulo];
+    const imgModal = $("#imgModal");
+    if (!imgModal) return;
+    const src = inspAtual.img[angulo] || inspAtual.img.frente;
+    imgModal.src = src;
+    imgModal.alt = inspAtual.title + " - " + rotulo;
+    aplicarFallback(imgModal);
+
+    const modalTitulo = $("#modalTitulo");
+    if (modalTitulo){
+      modalTitulo.innerHTML = "";
+      modalTitulo.appendChild(document.createTextNode(inspAtual.title + " "));
+      const tag = document.createElement("span");
+      tag.className = "angle";
+      tag.textContent = rotulo;
+      modalTitulo.appendChild(tag);
+    }
+
+    const modalDesc = $("#modalDesc");
+    if (modalDesc){
+      modalDesc.textContent = (inspAtual.descricoes && inspAtual.descricoes[angulo]) || inspAtual.desc;
+    }
+
+    const modalThumbs = $("#modalThumbs");
+    if (modalThumbs){
+      modalThumbs.innerHTML = "";
+      ORDEM_ANGULOS.forEach(function(a, i){
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "thumb";
+        if (i === anguloAtual) b.setAttribute("aria-current","true");
+        b.setAttribute("aria-label", inspAtual.title + " - " + ANGULOS[a]);
+        const t = document.createElement("img");
+        t.alt = "";
+        aplicarFallback(t);
+        t.src = inspAtual.img[a] || inspAtual.img.frente;
+        b.appendChild(t);
+        b.addEventListener("click", function(){ anguloAtual = i; mostrarAngulo(); });
+        modalThumbs.appendChild(b);
+      });
+    }
+
+    const itensKit = inspAtual.kit || [];
+    const kitBox = $("#modalKit");
+    const kitLista = $("#modalKitLista");
+    if (kitLista){
+      kitLista.innerHTML = "";
+      itensKit.forEach(function(k, i){
+        kitLista.appendChild(criarKitProdutoCard(k, inspAtual, ORDEM_ANGULOS[i % 3]));
+      });
+    }
+    if (kitBox) kitBox.hidden = itensKit.length === 0;
+    const cta = $("#modalCta");
+    if (cta) cta.hidden = itensKit.length === 0;
+
+    atualizarBotaoFavModal();
+  }
+
+  function criarKitProdutoCard(k, insp, anguloMini){
+    const a = document.createElement("a");
+    a.className = "kit-produto-card";
+    a.href = "#";
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      showToast("Link afiliado pendente de configuração");
+    });
+    const imgDiv = document.createElement("div");
+    imgDiv.className = "kit-produto-img";
+    imgDiv.setAttribute("aria-hidden", "true");
+    const src = insp.img[anguloMini] || insp.img.frente;
+    imgDiv.style.backgroundImage = "url('" + src + "')";
+    a.appendChild(imgDiv);
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "kit-produto-info";
+    const tag = document.createElement("span"); tag.className = "kit-produto-corte"; tag.textContent = insp.title;
+    infoDiv.appendChild(tag);
+    const nome = document.createElement("span"); nome.className = "kit-produto-nome"; nome.textContent = k.nome;
+    infoDiv.appendChild(nome);
+    if (k.razao){
+      const r = document.createElement("span"); r.className = "kit-produto-razao"; r.textContent = k.razao;
+      infoDiv.appendChild(r);
+    }
+    a.appendChild(infoDiv);
+
+    const cta = document.createElement("span");
+    cta.className = "kit-produto-cta";
+    cta.setAttribute("aria-hidden", "true");
+    cta.innerHTML = "&#8599;";
+    a.appendChild(cta);
+    return a;
+  }
+
+  function atualizarBotaoFavModal(){
+    const modalFav = $("#modalFav");
+    if (!modalFav || !inspAtual) return;
+    const fav = isFav(inspAtual.id);
+    modalFav.classList.toggle("on", fav);
+    modalFav.setAttribute("aria-pressed", fav);
+    modalFav.setAttribute("aria-label", fav ? "Remover dos favoritos" : "Adicionar aos favoritos");
+  }
+
+  function closeModal(){
+    const modal = $("#modal");
+    if (!modal || !modal.classList.contains("ativo")) return;
+    resetZoom();
+    modal.classList.remove("ativo");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (ultimoFoco && ultimoFoco.focus) ultimoFoco.focus();
+  }
+
+  /* ============ ZOOM ============ */
+  function getZoomScale(){
+    const imgModal = $("#imgModal");
+    if (!imgModal) return 1;
+    const baseW = imgModal.offsetWidth || 1;
+    const baseH = imgModal.offsetHeight || 1;
+    const maxW = window.innerWidth * 0.96;
+    const maxH = window.innerHeight * 0.96;
+    const limiteW = maxW / baseW;
+    const limiteH = maxH / baseH;
+    const limiteViewport = Math.min(limiteW, limiteH);
+    const desejada = window.matchMedia("(max-width: 640px)").matches ? 1.7 : 2.2;
+    return Math.min(desejada, limiteViewport);
+  }
+  function aplicarPan(){
+    const imgModal = $("#imgModal");
+    if (!imgModal) return;
+    const s = getZoomScale();
+    imgModal.style.transform = "scale(" + s + ") translate(" + (panX / s) + "px, " + (panY / s) + "px)";
+  }
+  function toggleZoom(){
+    const imgModal = $("#imgModal"), modal = $("#modal"), modalStage = $("#modalStage");
+    if (!imgModal || !modal || !modalStage) return;
+    zoomAtivo = !zoomAtivo;
+    const s = getZoomScale();
+    if (zoomAtivo){
+      imgModal.classList.add("zoom");
+      modal.classList.add("zoom-mode");
+      modalStage.classList.add("zoom-ativo");
+      panX = 0; panY = 0;
+      imgModal.style.transform = "scale(" + s + ")";
+      imgModal.style.transition = "transform .45s cubic-bezier(.22,1,.36,1),border-radius .45s cubic-bezier(.22,1,.36,1)";
+    } else {
+      resetZoom();
+    }
+  }
+  function resetZoom(){
+    if (!zoomAtivo) return;
+    const imgModal = $("#imgModal"), modal = $("#modal"), modalStage = $("#modalStage");
+    zoomAtivo = false;
+    if (imgModal){ imgModal.classList.remove("zoom","arrastando"); imgModal.style.transform = ""; imgModal.style.transition = ""; }
+    if (modal) modal.classList.remove("zoom-mode");
+    if (modalStage) modalStage.classList.remove("zoom-ativo");
+    panX = 0; panY = 0;
+  }
+  function startPan(e){
+    if (!zoomAtivo) return;
+    arrastandoImg = true;
+    const t = e.touches ? e.touches[0] : e;
+    panStartX = t.clientX; panStartY = t.clientY;
+    panOrigX = panX; panOrigY = panY;
+    const imgModal = $("#imgModal");
+    if (imgModal){ imgModal.classList.add("arrastando"); imgModal.style.transition = "none"; }
+    e.preventDefault();
+  }
+  function movePan(e){
+    if (!arrastandoImg) return;
+    const t = e.touches ? e.touches[0] : e;
+    let nx = panOrigX + (t.clientX - panStartX);
+    let ny = panOrigY + (t.clientY - panStartY);
+    const imgModal = $("#imgModal");
+    if (!imgModal) return;
+    const s = getZoomScale();
+    const baseW = imgModal.offsetWidth || 1;
+    const baseH = imgModal.offsetHeight || 1;
+    const extraX = Math.max(0, (baseW * s - baseW) / 2);
+    const extraY = Math.max(0, (baseH * s - baseH) / 2);
+    const overW = Math.max(0, (baseW * s - window.innerWidth) / 2);
+    const overH = Math.max(0, (baseH * s - window.innerHeight) / 2);
+    const maxX = Math.max(0, extraX - overW);
+    const maxY = Math.max(0, extraY - overH);
+    nx = Math.max(-maxX, Math.min(maxX, nx));
+    ny = Math.max(-maxY, Math.min(maxY, ny));
+    panX = nx; panY = ny;
+    aplicarPan();
+    e.preventDefault();
+  }
+  function endPan(){
+    if (!arrastandoImg) return;
+    arrastandoImg = false;
+    const imgModal = $("#imgModal");
+    if (imgModal){
+      imgModal.classList.remove("arrastando");
+      imgModal.style.transition = "transform .3s cubic-bezier(.22,1,.36,1)";
+    }
+  }
+
+  /* ============ COMPARTILHAR ============ */
+  function compartilharInsp(insp){
+    const rotulo = ANGULOS[ORDEM_ANGULOS[anguloAtual]] || "Frente";
+    const url = location.origin + location.pathname;
+    const texto = "✨ " + insp.title + " (" + rotulo + ")\n" + insp.desc + "\n\n🌐 Veja mais no HairOS:\n" + url;
+    if (navigator.share){
+      navigator.share({ title: insp.title + " — HairOS", text: texto }).catch(function(err){
+        if (!(err && err.name === "AbortError")) copiarLink(url);
+      });
+    } else {
+      copiarLink(url);
+    }
+  }
+  function copiarLink(url){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ showToast("Link copiado!"); }).catch(function(){ fallbackCopy(url); });
+    } else fallbackCopy(url);
+  }
+  function fallbackCopy(text){
+    try {
+      const t = document.createElement("textarea");
+      t.value = text; t.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+      document.body.appendChild(t); t.select();
+      document.execCommand("copy"); document.body.removeChild(t);
+      showToast("Link copiado!");
+    } catch(e){ showToast("Não foi possível copiar."); }
+  }
+
+  /* ============ DRAWER ============ */
+  function abrirDrawer(){
+    const drawer = $("#drawer"), overlay = $("#drawerOverlay"), btn = $("#menuBtn");
+    if (!drawer || !overlay) return;
+    drawer.classList.add("aberto");
+    drawer.setAttribute("aria-hidden","false");
+    overlay.hidden = false;
+    requestAnimationFrame(function(){ overlay.classList.add("ativo"); });
+    if (btn) btn.setAttribute("aria-expanded","true");
+    document.body.style.overflow = "hidden";
+    const fechar = $("#drawerFechar");
+    if (fechar) fechar.focus();
+  }
+  function fecharDrawer(){
+    const drawer = $("#drawer"), overlay = $("#drawerOverlay"), btn = $("#menuBtn");
+    if (!drawer || !drawer.classList.contains("aberto")) return;
+    drawer.classList.remove("aberto");
+    drawer.setAttribute("aria-hidden","true");
+    if (overlay){ overlay.classList.remove("ativo"); setTimeout(function(){ overlay.hidden = true; }, 350); }
+    if (btn) btn.setAttribute("aria-expanded","false");
+    document.body.style.overflow = "";
+  }
+
+  /* ============ SEARCH ============ */
+  function performSearch(term){
+    const q = normalize(term.trim());
+    if (!q) return { insp:[], brands:[], lists:[] };
+    return {
+      insp: inspirations.filter(function(i){ return normalize(i.title + " " + i.tags.join(" ") + " " + i.desc).indexOf(q) !== -1; }),
+      brands: brands.filter(function(b){ return normalize(b.name).indexOf(q) !== -1; }),
+      lists: affiliateLists.filter(function(l){ return normalize(l.title + " " + l.description).indexOf(q) !== -1; })
+    };
+  }
+  function renderSearchResults(term){
+    const box = $("#searchResults");
+    if (!box) return;
+    if (!term.trim()){ box.classList.remove("open"); box.innerHTML = ""; return; }
+    const r = performSearch(term);
+    const total = r.insp.length + r.brands.length + r.lists.length;
+    let html = "";
+    if (!total){
+      html = '<div class="search-empty">Nenhum resultado para "<b>' + term + '</b>".</div>';
+    } else {
+      if (r.insp.length){
+        html += '<div class="search-group-title">Inspirações</div>';
+        html += r.insp.slice(0,6).map(function(i){
+          return '<button type="button" class="search-result" data-goto="' + i.id + '">'
+            + '<img src="' + i.img.frente + '" alt="" />'
+            + '<div><div class="sr-title">' + i.title + '</div><div class="sr-sub">' + i.tags.slice(0,2).join(" · ") + '</div></div></button>';
+        }).join("");
+      }
+      if (r.brands.length){
+        html += '<div class="search-group-title">Marcas</div>';
+        html += r.brands.slice(0,4).map(function(b){
+          return '<a class="search-result" href="#/marcas/' + b.id + '" data-link>'
+            + '<div class="sr-thumb">' + b.name[0] + '</div>'
+            + '<div><div class="sr-title">' + b.name + '</div><div class="sr-sub">Marca</div></div></a>';
+        }).join("");
+      }
+      if (r.lists.length){
+        html += '<div class="search-group-title">Listas</div>';
+        html += r.lists.slice(0,4).map(function(l){
+          return '<a class="search-result" href="#/lista/' + l.id + '" data-link>'
+            + '<img src="' + l.image + '" alt="" />'
+            + '<div><div class="sr-title">' + l.title + '</div><div class="sr-sub">Lista de produtos</div></div></a>';
+        }).join("");
+      }
+    }
+    box.innerHTML = html;
+    box.classList.add("open");
+
+    box.querySelectorAll("[data-goto]").forEach(function(b){
+      b.addEventListener("click", function(){ openModal(b.dataset.goto); fecharSearch(); });
+    });
+    box.querySelectorAll("[data-link]").forEach(function(a){ a.addEventListener("click", fecharSearch); });
+  }
+  function fecharSearch(){
+    const box = $("#searchResults"), input = $("#searchInput"), clear = $("#searchClear");
+    if (box) box.classList.remove("open");
+    if (input) input.value = "";
+    if (clear) clear.classList.remove("show");
+  }
+
+  /* ============ SHINE ============ */
+  function initShine(){
+    if (!(window.CSS && CSS.registerProperty)) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setInterval(function(){
+      if (document.hidden) return;
+      if (!document.body.classList.contains("app-pronta")) return;
+      if (document.body.style.overflow === "hidden") return;
+      const cards = [];
+      const vh = window.innerHeight;
+      document.querySelectorAll("#catalogo .card:not(.shine)").forEach(function(c){
+        const r = c.getBoundingClientRect();
+        if (r.width > 0 && r.bottom > 60 && r.top < vh - 60 && !c.matches(":hover")) cards.push(c);
+      });
+      if (!cards.length) return;
+      const c = cards[Math.floor(Math.random() * cards.length)];
+      c.classList.add("shine");
+      setTimeout(function(){ c.classList.remove("shine"); }, 2600);
+    }, 2400);
+  }
+
+  /* ============ LOADING ============ */
+  function finishLoading(){
+    const ls = $("#loadingScreen"), ll = $("#loadingLogo"), mc = $("#mainContent"),
+          lbc = $("#loadingBarContainer"), lt = $("#loadingText"), lp = $("#loadingPercent");
+    if (lbc) lbc.style.opacity = "0";
+    if (lt) lt.style.opacity = "0";
+    if (lp) lp.style.opacity = "0";
+    setTimeout(function(){ if (ll) ll.classList.add("zoom-out"); }, 250);
+    setTimeout(function(){
+      if (ls) ls.classList.add("hidden");
+      if (mc) mc.classList.add("visible");
       document.body.classList.add("app-pronta");
-    }, 800);
+    }, 700);
   }
-  let v = 0;
-  const pi = setInterval(() => {
-    v += 4; if(v > 100) v = 100;
-    lb.style.width = v + "%";
-    lp.textContent = v + "%";
-    if(v >= 100) clearInterval(pi);
-  }, 30);
-  setTimeout(finish, 1200);
-}
 
-document.addEventListener("DOMContentLoaded", initApp);
+  /* ============ INIT ============ */
+  function init(){
+    try {
+      // Router + hash
+      window.addEventListener("hashchange", router);
+      if (!location.hash) location.hash = "#/";
+
+      // Favoritos
+      updateFavBadges();
+
+      // Topbar / menu
+      const menuBtn = $("#menuBtn");
+      if (menuBtn) menuBtn.addEventListener("click", abrirDrawer);
+      const drawerFechar = $("#drawerFechar");
+      if (drawerFechar) drawerFechar.addEventListener("click", fecharDrawer);
+      const drawerOverlay = $("#drawerOverlay");
+      if (drawerOverlay) drawerOverlay.addEventListener("click", fecharDrawer);
+      $$(".drawer-nav button").forEach(function(b){
+        b.addEventListener("click", function(){
+          location.hash = b.dataset.route;
+          fecharDrawer();
+        });
+      });
+
+      // Dock
+      $$(".dock-btn[data-route]").forEach(function(b){
+        b.addEventListener("click", function(){ location.hash = b.dataset.route; });
+      });
+      const moreBtn = $("#moreBtn");
+      if (moreBtn) moreBtn.addEventListener("click", abrirDrawer);
+      const brandHome = $("#brandHome");
+      if (brandHome) brandHome.addEventListener("click", function(){ location.hash = "#/"; });
+
+      // Search
+      const searchInput = $("#searchInput");
+      const searchClear = $("#searchClear");
+      if (searchInput){
+        searchInput.addEventListener("input", function(e){
+          if (searchClear) searchClear.classList.toggle("show", e.target.value.length > 0);
+          renderSearchResults(e.target.value);
+        });
+        searchInput.addEventListener("keydown", function(e){ if (e.key === "Escape") fecharSearch(); });
+      }
+      if (searchClear){
+        searchClear.addEventListener("click", function(){
+          if (searchInput) searchInput.value = "";
+          searchClear.classList.remove("show");
+          fecharSearch();
+          if (searchInput) searchInput.focus();
+        });
+      }
+      document.addEventListener("click", function(e){
+        const box = $("#searchResults");
+        if (!box) return;
+        if (!e.target.closest(".search-wrap") && !e.target.closest("#searchResults")){
+          if (box.classList.contains("open")) fecharSearch();
+        }
+      });
+      const mobileSearchBtn = $("#mobileSearchBtn");
+      if (mobileSearchBtn){
+        if (window.matchMedia("(max-width: 899px)").matches) mobileSearchBtn.style.display = "grid";
+        mobileSearchBtn.addEventListener("click", function(){
+          if (searchInput){ searchInput.focus(); searchInput.scrollIntoView({behavior:"smooth", block:"center"}); }
+        });
+      }
+
+      // Modal buttons
+      const btnFechar = $("#fecharModal");
+      if (btnFechar) btnFechar.addEventListener("click", closeModal);
+      const btnPrev = $("#btnPrev");
+      if (btnPrev) btnPrev.addEventListener("click", function(){ anguloAtual = (anguloAtual - 1 + 3) % 3; mostrarAngulo(); });
+      const btnNext = $("#btnNext");
+      if (btnNext) btnNext.addEventListener("click", function(){ anguloAtual = (anguloAtual + 1) % 3; mostrarAngulo(); });
+      const modalFav = $("#modalFav");
+      if (modalFav) modalFav.addEventListener("click", function(e){
+        e.stopPropagation();
+        if (!inspAtual) return;
+        const nowFav = toggleFav(inspAtual.id);
+        modalFav.classList.toggle("on", nowFav);
+        modalFav.setAttribute("aria-pressed", nowFav);
+        modalFav.classList.add("pop");
+        setTimeout(function(){ modalFav.classList.remove("pop"); }, 500);
+        showToast(nowFav ? "Adicionado aos favoritos ♥" : "Removido dos favoritos");
+        if (parseHash() === "/favoritos") router();
+      });
+      const modalShare = $("#modalShare");
+      if (modalShare) modalShare.addEventListener("click", function(e){
+        e.stopPropagation();
+        if (inspAtual) compartilharInsp(inspAtual);
+      });
+
+      const modal = $("#modal");
+      const imgModal = $("#imgModal");
+      const modalStage = $("#modalStage");
+
+      if (imgModal) imgModal.addEventListener("click", function(e){
+        e.stopPropagation();
+        if (!arrastandoImg) toggleZoom();
+      });
+      if (modal) modal.addEventListener("click", function(e){
+        if (e.target === modal || e.target === modalStage){
+          if (zoomAtivo){ resetZoom(); return; }
+          closeModal();
+        }
+      });
+      if (imgModal){
+        imgModal.addEventListener("mousedown", startPan);
+        imgModal.addEventListener("touchstart", startPan, {passive:false});
+      }
+      window.addEventListener("mousemove", movePan);
+      window.addEventListener("touchmove", movePan, {passive:false});
+      window.addEventListener("mouseup", endPan);
+      window.addEventListener("touchend", endPan);
+      window.addEventListener("touchcancel", endPan);
+
+      document.addEventListener("keydown", function(e){
+        if (!modal || !modal.classList.contains("ativo")) return;
+        if (e.key === "Escape"){
+          if (zoomAtivo){ resetZoom(); return; }
+          closeModal(); return;
+        }
+        if (e.key === "ArrowLeft"){ anguloAtual = (anguloAtual - 1 + 3) % 3; mostrarAngulo(); return; }
+        if (e.key === "ArrowRight"){ anguloAtual = (anguloAtual + 1) % 3; mostrarAngulo(); return; }
+      });
+
+      // Swipe no modal
+      let toqueX = null, toqueY = null;
+      if (modalStage){
+        modalStage.addEventListener("touchstart", function(e){
+          if (zoomAtivo || arrastandoImg) return;
+          toqueX = e.touches[0].clientX; toqueY = e.touches[0].clientY;
+        }, {passive:true});
+        modalStage.addEventListener("touchend", function(e){
+          if (zoomAtivo || toqueX === null) return;
+          const dx = e.changedTouches[0].clientX - toqueX;
+          const dy = e.changedTouches[0].clientY - toqueY;
+          toqueX = null; toqueY = null;
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2){
+            anguloAtual = (anguloAtual + (dx < 0 ? 1 : -1) + 3) % 3;
+            mostrarAngulo();
+          }
+        }, {passive:true});
+      }
+
+      // Card mobile touch
+      document.addEventListener("touchstart", function(e){
+        const card = e.target.closest(".card");
+        $$(".card.touch-ativo").forEach(function(c){ c.classList.remove("touch-ativo"); });
+        if (card) card.classList.add("touch-ativo");
+      }, {passive:true});
+
+      // Nav auto-hide
+      (function(){
+        let ultimoY = window.scrollY, acumulado = 0, agendado = false;
+        function checar(){
+          agendado = false;
+          const y = Math.max(0, window.scrollY);
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          const dy = y - ultimoY;
+          ultimoY = y;
+          if (y < 80 || y > max - 80){ document.body.classList.remove("nav-escondida"); acumulado = 0; return; }
+          acumulado = (Math.sign(dy) === Math.sign(acumulado)) ? acumulado + dy : dy;
+          if (acumulado > 14) document.body.classList.add("nav-escondida");
+          else if (acumulado < -8) document.body.classList.remove("nav-escondida");
+        }
+        window.addEventListener("scroll", function(){ if (!agendado){ agendado = true; requestAnimationFrame(checar); } }, {passive:true});
+      })();
+
+      // Shine
+      initShine();
+
+      // Primeira renderização
+      router();
+
+      // Progresso do loading
+      const lb = $("#loadingBar"), lp = $("#loadingPercent");
+      let v = 0;
+      const pi = setInterval(function(){
+        v += 4; if (v > 100) v = 100;
+        if (lb) lb.style.width = v + "%";
+        if (lp) lp.textContent = v + "%";
+        if (v >= 100) clearInterval(pi);
+      }, 30);
+      setTimeout(finishLoading, 1100);
+
+    } catch(err){
+      console.error("HairOS init error:", err);
+      // Garantia: força o loading a sumir mesmo se algo quebrou
+      finishLoading();
+      // Se o app estiver vazio, mostra fallback
+      const app = $("#app");
+      if (app && !app.innerHTML.trim()){
+        app.innerHTML = '<div class="view"><div class="page-title"><h1>HairOS</h1><span class="divider"></span>'
+          + '<div class="sub">Algo deu errado<br><span class="highlight">recarregue a página</span></div></div>'
+          + '<div style="text-align:center;padding:40px 20px"><a class="btn btn-outline" href="#/">Início</a></div></div>';
+      }
+    }
+  }
+
+  if (document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
 </script>
 </body>
 </html>

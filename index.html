@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#F4EFE8" />
+<title>HairOS — Inspiração • Visagismo • Você</title>
+<meta name="description" content="HairOS — plataforma de inspiração capilar, visagismo, cortes, coloração, penteados e recomendações de produtos profissionais." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ========== DESIGN TOKENS ========== */
+  :root{
+    --bg-light:#F4EFE8;
+    --bg-dark:#111114;
+    --brown:#33251E;
+    --gold:#B8956A;
+    --beige:#E7D8C5;
+    --text:#25211D;
+    --text-muted:#77716B;
+    --white:#FFFFFF;
+    --line:#E2D8CA;
+    --shadow-sm:0 2px 8px rgba(51,37,30,.06);
+    --shadow-md:0 6px 24px rgba(51,37,30,.10);
+    --shadow-lg:0 12px 40px rgba(51,37,30,.14);
+    --radius:14px;
+    --radius-sm:10px;
+    --radius-lg:22px;
+    --font-serif:'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-sans:'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    --maxw:1200px;
+    --nav-h:64px;
+    --pad-x:20px;
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:var(--font-sans);
+    background:var(--bg-light);
+    color:var(--text);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3,h4{font-family:var(--font-serif);font-weight:500;line-height:1.15;margin:0;color:var(--text);}
+  p{margin:0;}
+  ul{margin:0;padding:0;list-style:none;}
+
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px;}
+
+  .container{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad-x);padding-right:var(--pad-x);}
+
+  .eyebrow{
+    font-family:var(--font-sans);
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .muted{color:var(--text-muted);}
+
+  /* ========== TOPBAR ========== */
+  .topbar{
+    position:sticky;top:0;z-index:60;
+    background:rgba(244,239,232,.92);
+    backdrop-filter:saturate(1.2) blur(10px);
+    -webkit-backdrop-filter:saturate(1.2) blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    display:flex;align-items:center;gap:12px;
+    height:var(--nav-h);
+    max-width:var(--maxw);margin:0 auto;
+    padding:0 var(--pad-x);
+  }
+  .brand{display:flex;flex-direction:column;line-height:1;flex-shrink:0;}
+  .brand-name{font-family:var(--font-serif);font-size:26px;font-weight:600;letter-spacing:.02em;color:var(--brown);}
+  .brand-name .dot{color:var(--gold);}
+  .brand-sub{font-size:8.5px;letter-spacing:.26em;color:var(--text-muted);margin-top:3px;font-weight:600;}
+  .top-nav{display:none;gap:26px;margin-left:32px;}
+  .top-nav a{
+    font-size:13.5px;color:var(--text);font-weight:500;
+    padding:6px 0;position:relative;transition:color .18s;
+  }
+  .top-nav a:hover,.top-nav a.active{color:var(--gold);}
+  .top-nav a.active::after{
+    content:"";position:absolute;left:0;right:0;bottom:-2px;height:1.5px;background:var(--gold);
+  }
+  .topbar-actions{display:flex;align-items:center;gap:4px;margin-left:auto;}
+  .icon-btn{
+    width:40px;height:40px;display:grid;place-items:center;
+    border-radius:50%;color:var(--brown);transition:background .18s;
+  }
+  .icon-btn:hover{background:rgba(184,149,106,.14);}
+  .icon-btn .badge{
+    position:absolute;transform:translate(12px,-12px);
+    background:var(--gold);color:var(--white);
+    font-size:9.5px;font-weight:700;
+    min-width:16px;height:16px;padding:0 4px;
+    border-radius:10px;display:none;place-items:center;
+  }
+  .icon-btn.has-fav .badge{display:grid;}
+
+  /* Search bar (desktop) */
+  .search-wrap{
+    display:none;position:relative;flex:1;max-width:360px;margin-left:24px;
+  }
+  .search-wrap input{
+    width:100%;height:38px;padding:0 38px 0 38px;
+    border-radius:19px;border:1px solid var(--line);
+    background:var(--white);font-family:inherit;font-size:13.5px;color:var(--text);
+    transition:border-color .18s, box-shadow .18s;
+  }
+  .search-wrap input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(184,149,106,.15);}
+  .search-wrap .s-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+  .search-wrap .s-clear{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    width:26px;height:26px;border-radius:50%;display:none;place-items:center;color:var(--text-muted);
+  }
+  .search-wrap .s-clear.show{display:grid;}
+  .search-wrap .s-clear:hover{background:var(--beige);color:var(--brown);}
+
+  @media(min-width:900px){
+    :root{--nav-h:74px;}
+    .brand-name{font-size:30px;}
+    .top-nav{display:flex;}
+    .search-wrap{display:flex;}
+    .mobile-only{display:none !important;}
+  }
+
+  /* ========== MOBILE BOTTOM NAV ========== */
+  .bottom-nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:70;
+    background:rgba(244,239,232,.96);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(5,1fr);
+    padding-bottom:env(safe-area-inset-bottom);
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+  }
+  .bottom-nav button{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;padding:9px 2px 10px;min-height:56px;
+    color:var(--text-muted);font-size:10.5px;font-weight:500;
+    transition:color .18s;
+    position:relative;
+  }
+  .bottom-nav button svg{width:22px;height:22px;}
+  .bottom-nav button.active{color:var(--brown);}
+  .bottom-nav button.active svg{color:var(--gold);}
+  .bottom-nav button .badge{
+    position:absolute;top:4px;right:calc(50% - 18px);
+    background:var(--gold);color:var(--white);
+    font-size:9px;font-weight:700;
+    min-width:15px;height:15px;padding:0 4px;
+    border-radius:8px;display:none;place-items:center;
+  }
+  .bottom-nav button.has-fav .badge{display:grid;}
+
+  @media(min-width:900px){.bottom-nav{display:none;}}
+
+  /* ========== MAIN ========== */
+  main{
+    min-height:calc(100vh - var(--nav-h));
+    padding-bottom:calc(90px + env(safe-area-inset-bottom));
+  }
+  @media(min-width:900px){main{padding-bottom:40px;}}
+
+  .view{animation:fadeIn .32s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* ========== HERO ========== */
+  .hero{
+    position:relative;background:var(--brown);
+    color:var(--white);overflow:hidden;
+    border-radius:0 0 var(--radius-lg) var(--radius-lg);
+    margin-bottom:36px;
+  }
+  .hero-grid{display:grid;grid-template-columns:1fr;}
+  .hero-media{position:relative;aspect-ratio:3/4;max-height:520px;overflow:hidden;}
+  .hero-media img{width:100%;height:100%;object-fit:cover;object-position:center 25%;}
+  .hero-media::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(17,17,20,0) 30%,rgba(17,17,20,.85) 100%);
+  }
+  .hero-content{
+    position:relative;padding:26px var(--pad-x) 34px;
+    margin-top:-70px;z-index:2;
+  }
+  .hero h1{
+    font-size:clamp(30px,7vw,46px);
+    color:var(--white);line-height:1.08;margin-bottom:14px;
+    letter-spacing:-.01em;
+  }
+  .hero h1 em{font-style:italic;color:var(--beige);}
+  .hero p{
+    color:rgba(255,255,255,.82);font-size:15px;max-width:460px;
+    margin-bottom:24px;
+  }
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    height:46px;padding:0 24px;border-radius:24px;
+    font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.01em;
+    transition:transform .15s, box-shadow .18s, background .18s, color .18s;
+    min-width:44px;
+  }
+  .btn:active{transform:scale(.98);}
+  .btn-primary{background:var(--gold);color:var(--brown);}
+  .btn-primary:hover{background:#c9a678;box-shadow:var(--shadow-md);}
+  .btn-outline{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.4);}
+  .btn-outline:hover{background:rgba(255,255,255,.1);border-color:var(--white);}
+  .btn-dark{background:var(--brown);color:var(--white);}
+  .btn-dark:hover{background:#231914;}
+  .btn-ghost{background:var(--beige);color:var(--brown);}
+  .btn-ghost:hover{background:#dcc9b0;}
+
+  @media(min-width:900px){
+    .hero{margin:24px auto 48px;max-width:var(--maxw);border-radius:var(--radius-lg);}
+    .hero-grid{grid-template-columns:1.1fr 1fr;min-height:520px;}
+    .hero-media{aspect-ratio:auto;max-height:none;height:100%;}
+    .hero-media::after{background:linear-gradient(90deg,rgba(17,17,20,.7) 0%,rgba(17,17,20,0) 60%);}
+    .hero-content{
+      position:absolute;left:0;top:0;bottom:0;right:auto;
+      display:flex;flex-direction:column;justify-content:center;
+      max-width:560px;padding:60px 56px;margin:0;
+      background:linear-gradient(90deg,rgba(17,17,20,.75),rgba(17,17,20,0));
+      border-radius:var(--radius-lg);
+    }
+    .hero h1{font-size:clamp(40px,4.5vw,58px);}
+    .hero p{font-size:16.5px;}
+  }
+
+  /* ========== SECTION HEADERS ========== */
+  .section{padding:8px 0 44px;}
+  .section-head{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    gap:16px;margin-bottom:22px;flex-wrap:wrap;
+  }
+  .section-head h2{font-size:clamp(24px,4.6vw,34px);letter-spacing:-.01em;}
+  .section-head .lead{color:var(--text-muted);font-size:14.5px;margin-top:6px;max-width:520px;}
+  .link-more{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13.5px;font-weight:600;color:var(--brown);
+    padding:8px 0;transition:color .18s;
+  }
+  .link-more:hover{color:var(--gold);}
+  .link-more svg{transition:transform .18s;}
+  .link-more:hover svg{transform:translateX(3px);}
+
+  /* ========== BENEFITS ========== */
+  .benefits{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+    margin-bottom:44px;
+  }
+  .benefit{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:14px 12px;border-radius:var(--radius-sm);
+    background:var(--white);border:1px solid var(--line);
+  }
+  .benefit svg{color:var(--gold);flex-shrink:0;margin-top:2px;}
+  .benefit b{display:block;font-size:12.5px;font-weight:600;color:var(--brown);line-height:1.25;}
+  .benefit span{font-size:11.5px;color:var(--text-muted);line-height:1.35;display:block;margin-top:2px;}
+  @media(min-width:768px){.benefits{grid-template-columns:repeat(4,1fr);}}
+
+  /* ========== CATEGORY / CARD GRIDS ========== */
+  .grid-cat{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+  }
+  @media(min-width:600px){.grid-cat{grid-template-columns:repeat(3,1fr);}}
+  @media(min-width:900px){.grid-cat{grid-template-columns:repeat(4,1fr);gap:18px;}}
+
+  .cat-card{
+    position:relative;display:block;overflow:hidden;
+    border-radius:var(--radius);background:var(--brown);color:var(--white);
+    aspect-ratio:3/4;
+    transition:transform .22s, box-shadow .22s;
+  }
+  .cat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+  .cat-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+  .cat-card:hover img{transform:scale(1.06);}
+  .cat-card::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(17,17,20,0) 40%,rgba(17,17,20,.88) 100%);
+  }
+  .cat-card-body{
+    position:absolute;left:0;right:0;bottom:0;padding:14px;z-index:2;
+  }
+  .cat-card-body h3{font-size:17px;color:var(--white);line-height:1.15;margin-bottom:3px;}
+  .cat-card-body p{font-size:11.5px;color:rgba(255,255,255,.75);line-height:1.35;}
+  .cat-card-body .arrow{
+    display:inline-flex;align-items:center;gap:5px;margin-top:8px;
+    font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;
+  }
+
+  /* ========== BRAND CARDS ========== */
+  .grid-brand{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  }
+  @media(min-width:600px){.grid-brand{grid-template-columns:repeat(3,1fr);}}
+  @media(min-width:900px){.grid-brand{grid-template-columns:repeat(4,1fr);gap:14px;}}
+  .brand-card{
+    display:flex;align-items:center;justify-content:center;
+    padding:24px 12px;border-radius:var(--radius-sm);
+    background:var(--white);border:1px solid var(--line);
+    font-family:var(--font-serif);font-size:19px;font-weight:600;
+    color:var(--brown);letter-spacing:.02em;text-align:center;
+    transition:border-color .18s, color .18s, transform .18s, background .18s;
+    min-height:88px;
+  }
+  .brand-card:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+
+  /* ========== RECOMMENDED COLLECTIONS ========== */
+  .grid-rec{
+    display:grid;grid-template-columns:1fr;gap:14px;
+  }
+  @media(min-width:600px){.grid-rec{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:900px){.grid-rec{grid-template-columns:repeat(3,1fr);gap:20px;}}
+  .rec-card{
+    display:grid;grid-template-columns:110px 1fr;gap:0;
+    border-radius:var(--radius);overflow:hidden;
+    background:var(--white);border:1px solid var(--line);
+    transition:transform .2s, box-shadow .2s;
+  }
+  .rec-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+  .rec-card img{width:100%;height:100%;object-fit:cover;aspect-ratio:1;}
+  .rec-card-body{padding:16px;}
+  .rec-card-body .eyebrow{font-size:9.5px;margin-bottom:4px;}
+  .rec-card-body h3{font-size:16px;line-height:1.2;margin-bottom:5px;}
+  .rec-card-body p{font-size:12px;color:var(--text-muted);line-height:1.4;}
+
+  /* ========== PAGE HEADER (categorias) ========== */
+  .page-head{padding:28px 0 20px;}
+  .breadcrumb{
+    display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+    font-size:12px;color:var(--text-muted);margin-bottom:14px;
+  }
+  .breadcrumb a:hover{color:var(--gold);}
+  .breadcrumb span{color:var(--brown);font-weight:500;}
+  .page-head h1{font-size:clamp(28px,6vw,42px);line-height:1.08;margin-bottom:10px;}
+  .page-head .intro{color:var(--text-muted);font-size:14.5px;max-width:640px;}
+
+  /* ========== FILTER CHIPS ========== */
+  .filters{
+    display:flex;gap:8px;overflow-x:auto;padding:14px 0 6px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .filters::-webkit-scrollbar{display:none;}
+  .chip{
+    flex-shrink:0;display:inline-flex;align-items:center;gap:6px;
+    height:34px;padding:0 16px;border-radius:18px;
+    background:var(--white);border:1px solid var(--line);
+    font-family:inherit;font-size:12.5px;font-weight:500;color:var(--text);
+    transition:all .18s;white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.active{background:var(--brown);color:var(--white);border-color:var(--brown);}
+
+  /* ========== INSPIRATION GRID ========== */
+  .grid-insp{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px;
+  }
+  @media(min-width:600px){.grid-insp{grid-template-columns:repeat(3,1fr);gap:14px;}}
+  @media(min-width:900px){.grid-insp{grid-template-columns:repeat(4,1fr);gap:18px;}}
+
+  .insp-card{
+    position:relative;display:block;overflow:hidden;
+    border-radius:var(--radius);aspect-ratio:3/4;
+    background:var(--beige);cursor:pointer;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .insp-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+  .insp-card img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+  .insp-card:hover img{transform:scale(1.05);}
+  .insp-card::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(17,17,20,0) 55%,rgba(17,17,20,.82) 100%);
+    pointer-events:none;
+  }
+  .insp-info{
+    position:absolute;left:0;right:0;bottom:0;padding:11px 12px;z-index:2;
+    color:var(--white);pointer-events:none;
+  }
+  .insp-info h4{font-family:var(--font-serif);font-size:15px;color:var(--white);line-height:1.15;margin-bottom:2px;}
+  .insp-info p{font-size:10.5px;color:rgba(255,255,255,.75);}
+  .fav-btn{
+    position:absolute;top:8px;right:8px;z-index:3;
+    width:34px;height:34px;border-radius:50%;
+    background:rgba(255,255,255,.9);color:var(--brown);
+    display:grid;place-items:center;
+    transition:background .18s, color .18s, transform .15s;
+    backdrop-filter:blur(4px);
+  }
+  .fav-btn:hover{background:var(--white);}
+  .fav-btn.active{color:#C94B4B;}
+  .fav-btn:active{transform:scale(.9);}
+
+  /* ========== MODAL ========== */
+  .modal-backdrop{
+    position:fixed;inset:0;z-index:100;
+    background:rgba(17,17,20,.72);
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+    display:none;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .modal-backdrop.open{display:flex;animation:fadeIn .2s ease;}
+  .modal{
+    background:var(--bg-light);width:100%;height:100%;
+    max-height:100vh;overflow-y:auto;
+    border-radius:0;position:relative;
+    animation:slideUp .28s ease;
+  }
+  @keyframes slideUp{from{transform:translateY(20px);opacity:.5;}to{transform:none;opacity:1;}}
+  @media(min-width:768px){
+    .modal-backdrop{padding:32px;}
+    .modal{max-width:820px;max-height:90vh;border-radius:var(--radius-lg);overflow-y:auto;}
+  }
+  .modal-close{
+    position:sticky;top:12px;margin-left:auto;margin-right:12px;
+    width:40px;height:40px;border-radius:50%;
+    background:var(--white);color:var(--brown);
+    display:grid;place-items:center;z-index:5;
+    box-shadow:var(--shadow-sm);
+  }
+  .modal-close:hover{background:var(--beige);}
+  .modal-img{width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--beige);}
+  @media(min-width:768px){.modal-img{aspect-ratio:16/10;max-height:420px;}}
+  .modal-body{padding:20px var(--pad-x) 32px;}
+  @media(min-width:768px){.modal-body{padding:26px 34px 36px;}}
+  .modal-body h2{font-size:clamp(24px,4vw,32px);margin-bottom:6px;}
+  .modal-tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 18px;}
+  .modal-tags span{
+    font-size:11px;padding:5px 10px;border-radius:12px;
+    background:var(--beige);color:var(--brown);font-weight:500;
+  }
+  .modal-body p{color:var(--text-muted);font-size:14.5px;margin-bottom:18px;}
+  .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+
+  /* ========== EMPTY STATE ========== */
+  .empty{
+    text-align:center;padding:60px 20px;
+    color:var(--text-muted);
+  }
+  .empty svg{color:var(--beige);margin-bottom:14px;}
+  .empty h3{font-size:22px;color:var(--brown);margin-bottom:8px;}
+  .empty p{font-size:14px;max-width:360px;margin:0 auto 18px;}
+
+  /* ========== MORE SHEET ========== */
+  .sheet-backdrop{
+    position:fixed;inset:0;z-index:110;
+    background:rgba(17,17,20,.55);
+    display:none;
+  }
+  .sheet-backdrop.open{display:block;animation:fadeIn .2s;}
+  .sheet{
+    position:fixed;left:0;right:0;bottom:0;z-index:120;
+    background:var(--bg-light);
+    border-radius:22px 22px 0 0;
+    padding:10px 0 calc(20px + env(safe-area-inset-bottom));
+    transform:translateY(100%);
+    transition:transform .28s cubic-bezier(.2,.8,.2,1);
+    max-height:80vh;overflow-y:auto;
+  }
+  .sheet.open{transform:none;}
+  .sheet-handle{width:44px;height:4px;background:var(--line);border-radius:2px;margin:6px auto 14px;}
+  .sheet-list{padding:0 8px;}
+  .sheet-list a,.sheet-list button{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:14px 16px;border-radius:10px;
+    font-size:14.5px;font-weight:500;color:var(--text);
+    text-align:left;transition:background .15s;
+  }
+  .sheet-list a:hover,.sheet-list button:hover{background:var(--beige);}
+  .sheet-list svg{color:var(--gold);}
+
+  /* ========== FOOTER ========== */
+  footer{
+    background:var(--brown);color:rgba(255,255,255,.8);
+    padding:44px 0 30px;margin-top:20px;
+  }
+  .footer-grid{display:grid;gap:28px;}
+  @media(min-width:768px){.footer-grid{grid-template-columns:1.5fr 1fr 1fr;}}
+  footer .brand-name{color:var(--white);}
+  footer .brand-sub{color:rgba(255,255,255,.5);}
+  footer h4{font-family:var(--font-sans);font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:600;}
+  footer ul li{margin-bottom:9px;}
+  footer ul a{font-size:13.5px;color:rgba(255,255,255,.7);transition:color .18s;}
+  footer ul a:hover{color:var(--gold);}
+  .footer-affiliate{
+    margin-top:32px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);
+    font-size:11.5px;color:rgba(255,255,255,.55);line-height:1.55;
+  }
+  .footer-credit{
+    margin-top:14px;font-size:11.5px;color:rgba(255,255,255,.45);
+  }
+
+  /* ========== SEARCH RESULTS (overlay) ========== */
+  .search-results{
+    position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;
+    background:var(--bg-light);z-index:55;
+    display:none;overflow-y:auto;
+    padding:16px var(--pad-x) 120px;
+  }
+  .search-results.open{display:block;}
+  @media(min-width:900px){
+    .search-results{
+      position:absolute;top:calc(var(--nav-h) - 4px);left:auto;right:var(--pad-x);
+      width:380px;max-height:70vh;bottom:auto;border-radius:var(--radius);
+      box-shadow:var(--shadow-lg);border:1px solid var(--line);
+      padding:8px;padding-bottom:8px;
+    }
+  }
+  .search-group-title{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);font-weight:600;padding:10px 12px 6px;}
+  .search-result{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 12px;border-radius:10px;width:100%;text-align:left;
+    transition:background .15s;
+  }
+  .search-result:hover{background:var(--white);}
+  .search-result img{width:38px;height:38px;border-radius:8px;object-fit:cover;background:var(--beige);flex-shrink:0;}
+  .search-result .sr-title{font-size:13.5px;font-weight:500;color:var(--text);line-height:1.25;}
+  .search-result .sr-sub{font-size:11.5px;color:var(--text-muted);}
+  .search-empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:13.5px;}
+
+  /* ========== INSTITUTIONAL PAGE ========== */
+  .inst{max-width:720px;margin:0 auto;padding:32px 0 60px;}
+  .inst h1{font-size:clamp(28px,5vw,40px);margin-bottom:16px;}
+  .inst h2{font-size:20px;margin:26px 0 8px;}
+  .inst p{color:var(--text-muted);font-size:14.5px;margin-bottom:12px;}
+  .inst ul{list-style:disc;padding-left:20px;color:var(--text-muted);font-size:14px;margin-bottom:14px;}
+  .inst ul li{margin-bottom:6px;}
+
+  /* ========== LIST DETAIL (marcas/afiliados) ========== */
+  .list-hero{
+    display:grid;grid-template-columns:1fr;gap:0;
+    background:var(--white);border-radius:var(--radius);
+    overflow:hidden;border:1px solid var(--line);margin-bottom:26px;
+  }
+  @media(min-width:640px){.list-hero{grid-template-columns:1fr 1.2fr;}}
+  .list-hero img{width:100%;height:100%;aspect-ratio:4/3;object-fit:cover;background:var(--beige);}
+  .list-hero-body{padding:22px 20px;}
+  @media(min-width:640px){.list-hero-body{padding:28px;display:flex;flex-direction:column;justify-content:center;}}
+  .list-hero-body h1{font-size:clamp(22px,4.5vw,32px);margin-bottom:8px;}
+  .list-hero-body p{color:var(--text-muted);font-size:13.5px;margin-bottom:18px;}
+  .list-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+  .list-meta span{font-size:11px;padding:5px 10px;border-radius:12px;background:var(--beige);color:var(--brown);font-weight:500;}
+  .pending{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;color:#A6641B;background:#FBEEDB;
+    padding:10px 14px;border-radius:10px;font-weight:500;
+  }
+
+  /* ========== UTIL ========== */
+  .hidden{display:none !important;}
+  .mt-16{margin-top:16px;}
+  .mt-24{margin-top:24px;}
+  .mt-32{margin-top:32px;}
+  .center{text-align:center;}
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== TOPBAR ========== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#/" class="brand" aria-label="HairOS início">
+      <span class="brand-name">Hair<span class="dot">O</span>S</span>
+      <span class="brand-sub">INSPIRAÇÃO • VISAGISMO • VOCÊ</span>
+    </a>
+
+    <nav class="top-nav" aria-label="Navegação principal">
+      <a href="#/" data-nav="home">Início</a>
+      <a href="#/categorias" data-nav="categorias">Categorias</a>
+      <a href="#/marcas" data-nav="marcas">Marcas</a>
+      <a href="#/recomendacoes" data-nav="recomendacoes">Recomendações</a>
+    </nav>
+
+    <div class="search-wrap">
+      <svg class="s-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" type="search" placeholder="Buscar cortes, cores, marcas…" aria-label="Buscar" autocomplete="off" />
+      <button class="s-clear" id="searchClear" aria-label="Limpar busca">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="icon-btn mobile-only" id="mobileSearchBtn" aria-label="Buscar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <a href="#/favoritos" class="icon-btn" id="favIconBtn" aria-label="Favoritos" style="position:relative;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        <span class="badge" id="favBadgeTop">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ========== MOBILE SEARCH OVERLAY ========== -->
+<div class="search-results" id="searchResults" role="region" aria-label="Resultados da busca"></div>
+
+<!-- ========== MAIN ========== -->
+<main id="app"></main>
+
+<!-- ========== BOTTOM NAV (mobile) ========== -->
+<nav class="bottom-nav" aria-label="Navegação principal mobile">
+  <button data-nav="home" data-route="#/" aria-label="Início">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Início</span>
+  </button>
+  <button data-nav="categorias" data-route="#/categorias" aria-label="Categorias">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+    <span>Categorias</span>
+  </button>
+  <button data-nav="marcas" data-route="#/marcas" aria-label="Marcas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.6a2 2 0 0 1-2.83 0L2 12V3h9l9.59 9.59a2 2 0 0 1 0 2.82Z"/><circle cx="7" cy="7" r="1.2"/></svg>
+    <span>Marcas</span>
+  </button>
+  <button data-nav="favoritos" data-route="#/favoritos" aria-label="Favoritos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+    <span>Favoritos</span>
+    <span class="badge" id="favBadgeBottom">0</span>
+  </button>
+  <button id="moreBtn" aria-label="Mais">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    <span>Mais</span>
+  </button>
+</nav>
+
+<!-- ========== MORE SHEET ========== -->
+<div class="sheet-backdrop" id="sheetBackdrop"></div>
+<div class="sheet" id="moreSheet" role="dialog" aria-label="Mais opções">
+  <div class="sheet-handle"></div>
+  <div class="sheet-list">
+    <a href="#/recomendacoes">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 15 8.5 22 9.3l-5 5 1.2 7.2L12 18l-6.2 3.5L7 14.3l-5-5 7-.8Z"/></svg>
+      Minhas Recomendações
+    </a>
+    <a href="#/sobre">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Sobre o HairOS
+    </a>
+    <a href="#/contato">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><path d="m22 6-10 7L2 6"/></svg>
+      Contato
+    </a>
+    <a href="#/privacidade">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+      Política de Privacidade
+    </a>
+    <a href="#/termos">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      Termos de Uso
+    </a>
+  </div>
+</div>
+
+<!-- ========== MODAL ========== -->
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-label="Detalhes da inspiração">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- ========== DATA + LOGIC ========== -->
+<script>
+/* =========================================================
+   HairOS — protótipo single-file
+   Dados de exemplo + roteamento hash + favoritos + busca
+   ========================================================= */
+
+const IMG = {
+  hero: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop",
+  cortes: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80&auto=format&fit=crop",
+  coloracao: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800&q=80&auto=format&fit=crop",
+  penteados: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=800&q=80&auto=format&fit=crop",
+  noivas: "https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=800&q=80&auto=format&fit=crop",
+  produtos: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=800&q=80&auto=format&fit=crop",
+  ferramentas: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80&auto=format&fit=crop",
+  marcas: "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=800&q=80&auto=format&fit=crop",
+  recomendacoes: "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=800&q=80&auto=format&fit=crop"
+};
+
+/* ---------- CATEGORIAS ---------- */
+const categories = [
+  { id:"cortes", name:"Cortes", desc:"Referências de cortes femininos.", img:IMG.cortes, route:"#/cortes" },
+  { id:"coloracao", name:"Coloração", desc:"Loiros, ruivos, mechas e balayage.", img:IMG.coloracao, route:"#/coloracao" },
+  { id:"penteados", name:"Penteados", desc:"Coques, tranças e semipresos.", img:IMG.penteados, route:"#/penteados" },
+  { id:"noivas", name:"Noivas", desc:"Penteados e acessórios delicados.", img:IMG.noivas, route:"#/noivas" },
+  { id:"produtos", name:"Produtos", desc:"Tratamento, finalizadores e kits.", img:IMG.produtos, route:"#/produtos" },
+  { id:"ferramentas", name:"Ferramentas", desc:"Secadores, pranchas e escovas.", img:IMG.ferramentas, route:"#/ferramentas" },
+  { id:"marcas", name:"Marcas", desc:"Marcas profissionais de beleza.", img:IMG.marcas, route:"#/marcas" },
+  { id:"recomendacoes", name:"Minhas Recomendações", desc:"Curadoria pessoal do Márcio.", img:IMG.recomendacoes, route:"#/recomendacoes" }
+];
+
+/* ---------- MARCAS ---------- */
+const brands = [
+  { id:"keune", name:"Keune", route:"#/marcas/keune" },
+  { id:"loreal-expert", name:"L'Oréal Expert", route:"#/marcas/loreal-expert" },
+  { id:"loreal", name:"L'Oréal", route:"#/marcas/loreal" },
+  { id:"joico", name:"Joico", route:"#/marcas/joico" },
+  { id:"schwarzkopf", name:"Schwarzkopf", route:"#/marcas/schwarzkopf" },
+  { id:"living-proof", name:"Living Proof", route:"#/marcas/living-proof" },
+  { id:"davines", name:"Davines", route:"#/marcas/davines" },
+  { id:"kerastase", name:"Kérastase", route:"#/marcas/kerastase" },
+  { id:"mac", name:"MAC", route:"#/marcas/mac" },
+  { id:"igora-royal", name:"Igora Royal", route:"#/marcas/igora-royal" },
+  { id:"moroccanoil", name:"Moroccanoil", route:"#/marcas/moroccanoil" }
+];
+
+/* ---------- LISTAS AFILIADAS (14) — URLs vazias por enquanto ---------- */
+const affiliateLists = [
+  { id:"kit-keune", title:"Kit Keune", category:"coloracao", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Produtos profissionais Keune selecionados." },
+  { id:"kit-loreal-expert", title:"Kit L'Oréal Expert", category:"coloracao", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Linha profissional L'Oréal Expert." },
+  { id:"kit-loreal", title:"Kit L'Oréal", category:"coloracao", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Produtos L'Oréal para cuidados capilares." },
+  { id:"kit-joico", title:"Kit Joico", category:"produtos", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Tratamentos e finalizadores Joico." },
+  { id:"kit-schwarzkopf", title:"Kit Schwarzkopf", category:"coloracao", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Coloração e tratamento Schwarzkopf." },
+  { id:"kit-living-proof", title:"Kit Living Proof", category:"produtos", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Living Proof — ciência capilar." },
+  { id:"kit-davines", title:"Kit Davines", category:"produtos", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Beleza sustentável Davines." },
+  { id:"ferramentas-lista", title:"Ferramentas", category:"ferramentas", image:IMG.ferramentas, productCount:null, affiliateUrl:"", description:"Secadores, pranchas e modeladores." },
+  { id:"kit-kerastase", title:"Kit Kérastase", category:"produtos", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Cuidado premium Kérastase." },
+  { id:"kit-mac", title:"Kit MAC", category:"produtos", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Maquiagem profissional MAC." },
+  { id:"kit-noiva", title:"Kit Noiva", category:"noivas", image:IMG.noivas, productCount:null, affiliateUrl:"", description:"Produtos e acessórios para noivas." },
+  { id:"kit-igora-royal", title:"Kit Igora Royal", category:"coloracao", image:IMG.coloracao, productCount:null, affiliateUrl:"", description:"Coloração profissional Igora Royal." },
+  { id:"kit-moroccanoil", title:"Kit Moroccanoil", category:"produtos", image:IMG.produtos, productCount:null, affiliateUrl:"", description:"Óleos e tratamentos Moroccanoil." },
+  { id:"minhas-recomendacoes", title:"Minhas Recomendações", category:"recomendacoes", image:IMG.recomendacoes, productCount:null, affiliateUrl:"", description:"Curadoria pessoal do Márcio Maker." }
+];
+
+/* ---------- INSPIRAÇÕES (exemplo) ---------- */
+const inspirations = [
+  { id:"c1", cat:"cortes", title:"Long Bob Texturizado", desc:"Corte na altura do queixo com camadas suaves e textura natural.", tags:["bob","texturizado","comprimento médio"], img:"https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=800&q=80&auto=format&fit=crop" },
+  { id:"c2", cat:"cortes", title:"Pixie Moderno", desc:"Corte curto com laterais desfiadas e topo volumoso.", tags:["curto","pixie","moderno"], img:"https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?w=800&q=80&auto=format&fit=crop" },
+  { id:"c3", cat:"cortes", title:"Cortes em Camadas Longas", desc:"Camadas longas com movimento e leveza.", tags:["longo","camadas","movimento"], img:"https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&q=80&auto=format&fit=crop" },
+  { id:"c4", cat:"cortes", title:"Franja Cortina", desc:"Franja longa dividida ao meio emoldurando o rosto.", tags:["franja","curtain","rosto"], img:"https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80&auto=format&fit=crop" },
+  { id:"co1", cat:"coloracao", title:"Loiro Mel", desc:"Loiro quente com mechas mel e iluminado.", tags:["loiro","mel","mechas"], img:"https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=800&q=80&auto=format&fit=crop" },
+  { id:"co2", cat:"coloracao", title:"Ruivo Cobre", desc:"Ruivo intenso com reflexos cobre.", tags:["ruivo","cobre","intenso"], img:"https://images.unsplash.com/photo-1605980776566-0486c3ac7617?w=800&q=80&auto=format&fit=crop" },
+  { id:"co3", cat:"coloracao", title:"Balayage Natural", desc:"Degradê suave com transição natural.", tags:["balayage","natural","degradê"], img:"https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=800&q=80&auto=format&fit=crop" },
+  { id:"co4", cat:"coloracao", title:"Castanho Iluminado", desc:"Castanho com iluminado dourado discreto.", tags:["castanho","iluminado","dourado"], img:"https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80&auto=format&fit=crop" },
+  { id:"p1", cat:"penteados", title:"Coque Baixo Elegante", desc:"Coque baixo com fios soltos para um look sofisticado.", tags:["coque","baixo","elegante"], img:"https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=800&q=80&auto=format&fit=crop" },
+  { id:"p2", cat:"penteados", title:"Trança Lateral", desc:"Trança lateral suave com textura natural.", tags:["trança","lateral","natural"], img:"https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80&auto=format&fit=crop" },
+  { id:"p3", cat:"penteados", title:"Semipreso Ondulado", desc:"Semipreso com ondas soltas e romântico.", tags:["semipreso","ondas","romântico"], img:"https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=800&q=80&auto=format&fit=crop" },
+  { id:"n1", cat:"noivas", title:"Noiva Clássica", desc:"Coque clássico com véu e acessório delicado.", tags:["noiva","clássico","véu"], img:"https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?w=800&q=80&auto=format&fit=crop" },
+  { id:"n2", cat:"noivas", title:"Noiva Boho", desc:"Semipreso com flores e textura solta.", tags:["noiva","boho","flores"], img:"https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=800&q=80&auto=format&fit=crop" },
+  { id:"pr1", cat:"produtos", title:"Máscara Reconstrutora", desc:"Máscara de tratamento intensivo.", tags:["máscara","tratamento"], img:"https://images.unsplash.com/photo-1522338242992-e1a54906a8da?w=800&q=80&auto=format&fit=crop" },
+  { id:"pr2", cat:"produtos", title:"Óleo Capilar", desc:"Óleo finalizador com brilho.", tags:["óleo","brilho"], img:"https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=800&q=80&auto=format&fit=crop" },
+  { id:"f1", cat:"ferramentas", title:"Prancha Profissional", desc:"Prancha de cerâmica para alisamento.", tags:["prancha","profissional"], img:"https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=80&auto=format&fit=crop" },
+  { id:"f2", cat:"ferramentas", title:"Secador Íon", desc:"Secador profissional com tecnologia íon.", tags:["secador","íon"], img:"https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&q=80&auto=format&fit=crop" }
+];
+
+/* ---------- FILTROS POR CATEGORIA ---------- */
+const filtersByCat = {
+  cortes: ["Todos","Bob","Pixie","Longo","Franja"],
+  coloracao: ["Todos","Loiro","Ruivo","Castanho","Balayage"],
+  penteados: ["Todos","Coque","Trança","Semipreso"],
+  noivas: ["Todos","Clássico","Boho"],
+  produtos: ["Todos","Tratamento","Óleo"],
+  ferramentas: ["Todos","Prancha","Secador"]
+};
+
+/* =========================================================
+   STATE
+   ========================================================= */
+let currentRoute = "";
+let activeFilter = "Todos";
+let searchTerm = "";
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = (sel, root=document) => root.querySelector(sel);
+const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+function normalize(str){
+  return (str||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function favKey(id){ return "hairos_fav_" + id; }
+function getFavs(){
+  try{
+    const raw = localStorage.getItem("hairos_favs");
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function setFavs(arr){
+  try{ localStorage.setItem("hairos_favs", JSON.stringify(arr)); }catch(e){}
+}
+function isFav(id){ return getFavs().includes(id); }
+function toggleFav(id){
+  const arr = getFavs();
+  const idx = arr.indexOf(id);
+  if(idx >= 0) arr.splice(idx,1); else arr.push(id);
+  setFavs(arr);
+  updateFavBadge();
+  return arr.includes(id);
+}
+function updateFavBadge(){
+  const n = getFavs().length;
+  const top = $("#favBadgeTop"); const bot = $("#favBadgeBottom");
+  if(top){ top.textContent = n; top.closest(".icon-btn").classList.toggle("has-fav", n>0); }
+  if(bot){ bot.textContent = n; bot.closest("button").classList.toggle("has-fav", n>0); }
+}
+
+function getCatById(id){ return categories.find(c => c.id === id); }
+function getBrandById(id){ return brands.find(b => b.id === id); }
+function getAffiliateById(id){ return affiliateLists.find(a => a.id === id); }
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function el(html){ const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstElementChild; }
+
+function categoryCard(cat){
+  return `
+    <a class="cat-card" href="${cat.route}" aria-label="${cat.name}">
+      <img src="${cat.img}" alt="${cat.name}" loading="lazy" />
+      <div class="cat-card-body">
+        <h3>${cat.name}</h3>
+        <p>${cat.desc}</p>
+        <span class="arrow">Ver →</span>
+      </div>
+    </a>`;
+}
+
+function brandCard(b){
+  return `<a class="brand-card" href="${b.route}">${b.name}</a>`;
+}
+
+function inspCard(item){
+  const fav = isFav(item.id);
+  return `
+    <div class="insp-card" data-insp="${item.id}" role="button" tabindex="0" aria-label="Ver ${item.title}">
+      <img src="${item.img}" alt="${item.title}" loading="lazy" />
+      <button class="fav-btn ${fav?'active':''}" data-fav="${item.id}" aria-label="${fav?'Remover dos favoritos':'Adicionar aos favoritos'}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="${fav?'currentColor':'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      </button>
+      <div class="insp-info">
+        <h4>${item.title}</h4>
+        <p>${item.tags.slice(0,2).join(" · ")}</p>
+      </div>
+    </div>`;
+}
+
+/* =========================================================
+   ROUTES
+   ========================================================= */
+function renderHome(){
+  const favCount = getFavs().length;
+  const recommended = affiliateLists.filter(a => a.category === "produtos" || a.category === "ferramentas").slice(0,3);
+
+  return `
+  <div class="view">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-media">
+          <img src="${IMG.hero}" alt="Modelo com cabelo em destaque" />
+        </div>
+        <div class="hero-content">
+          <span class="eyebrow" style="color:var(--gold);">INSPIRAÇÃO • VISAGISMO • VOCÊ</span>
+          <h1 class="mt-16">Descubra o seu <em>próximo visual</em>.</h1>
+          <p>Cortes, colorações, penteados e inspirações profissionais para valorizar sua beleza e expressar sua identidade.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="#/categorias">Explorar categorias</a>
+            <a class="btn btn-outline" href="#/cortes">Descobrir inspirações</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="section">
+        <div class="benefits">
+          <div class="benefit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><b>Inspirações organizadas</b><span>Referências por categoria.</span></div>
+          </div>
+          <div class="benefit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <div><b>Conteúdo de visagismo</b><span>Análise de formato e estilo.</span></div>
+          </div>
+          <div class="benefit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            <div><b>Listas profissionais</b><span>Produtos recomendados.</span></div>
+          </div>
+          <div class="benefit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            <div><b>Em qualquer tela</b><span>Celular, tablet e desktop.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Categorias</span>
+            <h2 class="mt-16">Explore por inspiração</h2>
+            <p class="lead">Comece por cortes, coloração, penteados ou descubra marcas e produtos.</p>
+          </div>
+          <a class="link-more" href="#/categorias">Ver todas
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="grid-cat">
+          ${categories.slice(0,6).map(categoryCard).join("")}
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Marcas</span>
+            <h2 class="mt-16">Marcas profissionais</h2>
+            <p class="lead">Curadoria de marcas que respeitamos no universo da beleza.</p>
+          </div>
+          <a class="link-more" href="#/marcas">Ver todas
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="grid-brand">
+          ${brands.slice(0,8).map(brandCard).join("")}
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Curadoria</span>
+            <h2 class="mt-16">Minhas Recomendações</h2>
+            <p class="lead">Coleções pessoais do Márcio para cuidar do cabelo.</p>
+          </div>
+          <a class="link-more" href="#/recomendacoes">Ver tudo
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="grid-rec">
+          ${recommended.map(r => `
+            <a class="rec-card" href="#/lista/${r.id}">
+              <img src="${r.image}" alt="${r.title}" loading="lazy" />
+              <div class="rec-card-body">
+                <span class="eyebrow">${r.category}</span>
+                <h3>${r.title}</h3>
+                <p>${r.description}</p>
+              </div>
+            </a>
+          `).join("")}
+        </div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderCategorias(){
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <span>Categorias</span></div>
+        <h1>Categorias</h1>
+        <p class="intro">Explore todas as áreas do HairOS: cortes, coloração, penteados, noivas, produtos, ferramentas, marcas e recomendações.</p>
+      </div>
+      <section class="section">
+        <div class="grid-cat">
+          ${categories.map(categoryCard).join("")}
+        </div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderCategoryPage(catId){
+  const cat = getCatById(catId);
+  if(!cat) return renderNotFound();
+  const filters = filtersByCat[catId] || ["Todos"];
+  const list = inspirations.filter(i => i.cat === catId);
+  const filtered = activeFilter === "Todos"
+    ? list
+    : list.filter(i => normalize(i.tags.join(" ")).includes(normalize(activeFilter)) || normalize(i.title).includes(normalize(activeFilter)));
+
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <a href="#/categorias">Categorias</a> / <span>${cat.name}</span></div>
+        <h1>${cat.name}</h1>
+        <p class="intro">${cat.desc} Referências editoriais para inspirar seu próximo visual.</p>
+      </div>
+      <div class="filters" role="tablist" aria-label="Filtros">
+        ${filters.map(f => `<button class="chip ${f===activeFilter?'active':''}" data-filter="${f}" role="tab" aria-selected="${f===activeFilter}">${f}</button>`).join("")}
+      </div>
+      ${filtered.length ? `
+        <div class="grid-insp">
+          ${filtered.map(inspCard).join("")}
+        </div>
+      ` : `
+        <div class="empty">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <h3>Nenhuma inspiração encontrada</h3>
+          <p>Tente outro filtro ou explore outras categorias.</p>
+        </div>
+      `}
+    </div>
+  </div>`;
+}
+
+function renderMarcas(){
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <span>Marcas</span></div>
+        <h1>Marcas</h1>
+        <p class="intro">Marcas profissionais de beleza e cuidados capilares. Cada marca reúne inspirações e listas de produtos recomendados.</p>
+      </div>
+      <section class="section">
+        <div class="grid-brand">
+          ${brands.map(brandCard).join("")}
+        </div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderMarca(id){
+  const brand = getBrandById(id);
+  if(!brand) return renderNotFound();
+  const list = affiliateLists.find(a => a.id.includes(id) || a.title.toLowerCase().includes(brand.name.toLowerCase().split(" ")[0])) || null;
+  const brandInsp = inspirations.filter(i => i.cat === "coloracao" || i.cat === "produtos").slice(0,4);
+
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <a href="#/marcas">Marcas</a> / <span>${brand.name}</span></div>
+        <h1>${brand.name}</h1>
+        <p class="intro">Curadoria HairOS de inspirações e produtos da marca ${brand.name}.</p>
+      </div>
+      ${list ? renderListHero(list) : ""}
+      <section class="section">
+        <div class="section-head"><h2>Inspirações relacionadas</h2></div>
+        <div class="grid-insp">${brandInsp.map(inspCard).join("")}</div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderListHero(list){
+  return `
+    <div class="list-hero">
+      <img src="${list.image}" alt="${list.title}" />
+      <div class="list-hero-body">
+        <span class="eyebrow">${list.category}</span>
+        <h1 class="mt-16">${list.title}</h1>
+        <p>${list.description}</p>
+        <div class="list-meta">
+          ${list.productCount ? `<span>${list.productCount} produtos</span>` : `<span>Lista em curadoria</span>`}
+          <span>Afiliado Mercado Livre</span>
+        </div>
+        ${list.affiliateUrl ? `
+          <a class="btn btn-primary" href="${list.affiliateUrl}" target="_blank" rel="noopener noreferrer nofollow sponsored">Ver lista no Mercado Livre</a>
+        ` : `
+          <div class="pending">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            Link de afiliado pendente de configuração
+          </div>
+        `}
+      </div>
+    </div>`;
+}
+
+function renderListaDetalhe(id){
+  const list = getAffiliateById(id);
+  if(!list) return renderNotFound();
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <a href="#/recomendacoes">Recomendações</a> / <span>${list.title}</span></div>
+      </div>
+      ${renderListHero(list)}
+      <section class="section">
+        <div class="section-head"><h2>Sobre esta lista</h2></div>
+        <p class="muted" style="max-width:640px;font-size:14.5px;line-height:1.7;">
+          Esta é uma lista de produtos selecionados com cuidado para facilitar sua pesquisa. Ao clicar no botão acima (quando configurado),
+          você será direcionado ao Mercado Livre em uma nova aba. Podemos receber uma comissão por compras qualificadas, sem custo adicional para você.
+        </p>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderRecomendacoes(){
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <span>Minhas Recomendações</span></div>
+        <h1>Minhas Recomendações</h1>
+        <p class="intro">Curadoria pessoal do Márcio Maker: produtos e ferramentas que fazem diferença na rotina capilar.</p>
+      </div>
+      <section class="section">
+        <div class="grid-rec">
+          ${affiliateLists.map(r => `
+            <a class="rec-card" href="#/lista/${r.id}">
+              <img src="${r.image}" alt="${r.title}" loading="lazy" />
+              <div class="rec-card-body">
+                <span class="eyebrow">${r.category}</span>
+                <h3>${r.title}</h3>
+                <p>${r.description}</p>
+              </div>
+            </a>
+          `).join("")}
+        </div>
+      </section>
+    </div>
+  </div>`;
+}
+
+function renderFavoritos(){
+  const favs = getFavs();
+  const items = inspirations.filter(i => favs.includes(i.id));
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="page-head">
+        <div class="breadcrumb"><a href="#/">Início</a> / <span>Favoritos</span></div>
+        <h1>Favoritos</h1>
+        <p class="intro">Suas inspirações favoritas ficam salvas neste dispositivo.</p>
+      </div>
+      ${items.length ? `
+        <section class="section">
+          <div class="grid-insp">${items.map(inspCard).join("")}</div>
+        </section>
+      ` : `
+        <div class="empty">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <h3>Nenhum favorito ainda</h3>
+          <p>Toque no coração de qualquer inspiração para salvá-la aqui.</p>
+          <a class="btn btn-dark" href="#/categorias">Explorar categorias</a>
+        </div>
+      `}
+    </div>
+  </div>`;
+}
+
+function renderInstitucional(type){
+  const map = {
+    sobre: {
+      title: "Sobre o HairOS",
+      body: `<p>O HairOS é uma plataforma visual de inspiração capilar, visagismo e curadoria de produtos profissionais. Reunimos referências editoriais para ajudar você a encontrar cortes, cores e penteados que valorizam sua identidade.</p>
+             <p>Este é um protótipo navegável — o conteúdo é de exemplo e as listas de afiliados serão configuradas com links reais do Mercado Livre em breve.</p>
+             <p>Projeto idealizado por Márcio Maker — Beauty Tech.</p>`
+    },
+    contato: {
+      title: "Contato",
+      body: `<p>Em breve esta seção terá um formulário funcional. Por enquanto, os canais oficiais serão divulgados aqui.</p>
+             <p>Enquanto isso, explore as categorias e salve suas inspirações favoritas.</p>`
+    },
+    privacidade: {
+      title: "Política de Privacidade",
+      body: `<p>O HairOS valoriza sua privacidade. Este protótipo não coleta dados pessoais. Favoritos são armazenados apenas no seu navegador via localStorage.</p>
+             <ul>
+               <li>Nenhuma conta é necessária.</li>
+               <li>Nenhum dado é enviado a servidores.</li>
+               <li>Links afiliados serão claramente sinalizados.</li>
+             </ul>`
+    },
+    termos: {
+      title: "Termos de Uso",
+      body: `<p>Ao utilizar o HairOS você concorda com os seguintes termos:</p>
+             <ul>
+               <li>O conteúdo é oferecido para fins informativos e de inspiração.</li>
+               <li>Imagens são provenientes do Unsplash para demonstração.</li>
+               <li>Links de afiliados podem gerar comissão sem custo adicional para você.</li>
+               <li>Recomendações não substituem avaliação profissional.</li>
+             </ul>`
+    }
+  };
+  const info = map[type] || map.sobre;
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="inst">
+        <div class="breadcrumb"><a href="#/">Início</a> / <span>${info.title}</span></div>
+        <h1>${info.title}</h1>
+        ${info.body}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderNotFound(){
+  return `
+  <div class="view">
+    <div class="container">
+      <div class="empty" style="padding:100px 20px;">
+        <h3>Página não encontrada</h3>
+        <p>O endereço que você tentou acessar não existe.</p>
+        <a class="btn btn-dark" href="#/">Voltar ao início</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFooter(){
+  return `
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="margin-bottom:14px;">
+            <span class="brand-name">Hair<span class="dot">O</span>S</span>
+            <span class="brand-sub">INSPIRAÇÃO • VISAGISMO • VOCÊ</span>
+          </div>
+          <p style="font-size:13px;line-height:1.6;color:rgba(255,255,255,.65);max-width:340px;">
+            Plataforma visual de inspiração capilar, visagismo e curadoria de produtos profissionais.
+          </p>
+        </div>
+        <div>
+          <h4>Navegação</h4>
+          <ul>
+            <li><a href="#/">Início</a></li>
+            <li><a href="#/categorias">Categorias</a></li>
+            <li><a href="#/marcas">Marcas</a></li>
+            <li><a href="#/recomendacoes">Recomendações</a></li>
+            <li><a href="#/favoritos">Favoritos</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="#/sobre">Sobre</a></li>
+            <li><a href="#/contato">Contato</a></li>
+            <li><a href="#/privacidade">Política de Privacidade</a></li>
+            <li><a href="#/termos">Termos de Uso</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-affiliate">
+        Alguns links deste site são afiliados. Podemos receber uma comissão por compras qualificadas, sem custo adicional para você. As recomendações são apresentadas para facilitar sua pesquisa de produtos.
+      </div>
+      <div class="footer-credit">© ${new Date().getFullYear()} HairOS — Márcio Maker · Beauty Tech</div>
+    </div>
+  </footer>`;
+}
+
+/* =========================================================
+   ROUTER
+   ========================================================= */
+function parseHash(){
+  const h = location.hash.replace(/^#/, "") || "/";
+  return h;
+}
+
+function router(){
+  const path = parseHash();
+  currentRoute = path;
+  activeFilter = "Todos";
+  const app = $("#app");
+  let html = "";
+
+  if(path === "/" || path === "") html = renderHome();
+  else if(path === "/categorias") html = renderCategorias();
+  else if(path === "/cortes") html = renderCategoryPage("cortes");
+  else if(path === "/coloracao") html = renderCategoryPage("coloracao");
+  else if(path === "/penteados") html = renderCategoryPage("penteados");
+  else if(path === "/noivas") html = renderCategoryPage("noivas");
+  else if(path === "/produtos") html = renderCategoryPage("produtos");
+  else if(path === "/ferramentas") html = renderCategoryPage("ferramentas");
+  else if(path === "/marcas") html = renderMarcas();
+  else if(path.startsWith("/marcas/")){
+    const id = path.split("/")[2];
+    html = renderMarca(id);
+  }
+  else if(path === "/recomendacoes") html = renderRecomendacoes();
+  else if(path.startsWith("/lista/")){
+    const id = path.split("/")[2];
+    html = renderListaDetalhe(id);
+  }
+  else if(path === "/favoritos") html = renderFavoritos();
+  else if(path === "/sobre" || path === "/contato" || path === "/privacidade" || path === "/termos"){
+    html = renderInstitucional(path.slice(1));
+  }
+  else html = renderNotFound();
+
+  // Append footer only on home & category & lists pages
+  const showFooter = !["/favoritos"].includes(path);
+  app.innerHTML = html + (showFooter ? renderFooter() : "");
+
+  updateActiveNav();
+  window.scrollTo({ top: 0, behavior: "instant" });
+  bindEvents();
+}
+
+function updateActiveNav(){
+  const path = currentRoute;
+  let key = "";
+  if(path === "/") key = "home";
+  else if(path.startsWith("/categorias") || ["/cortes","/coloracao","/penteados","/noivas","/produtos","/ferramentas"].includes(path)) key = "categorias";
+  else if(path.startsWith("/marcas")) key = "marcas";
+  else if(path === "/favoritos") key = "favoritos";
+  else if(path === "/recomendacoes") key = "recomendacoes";
+
+  $$(".top-nav a").forEach(a => a.classList.toggle("active", a.dataset.nav === key));
+  $$(".bottom-nav button").forEach(b => b.classList.toggle("active", b.dataset.nav === key));
+}
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+function bindEvents(){
+  // Category filter chips
+  $$(".chip[data-filter]").forEach(chip => {
+    chip.addEventListener("click", () => {
+      activeFilter = chip.dataset.filter;
+      router();
+    });
+  });
+
+  // Inspiration card click -> modal
+  $$(".insp-card").forEach(card => {
+    card.addEventListener("click", (e) => {
+      if(e.target.closest(".fav-btn")) return;
+      openInspModal(card.dataset.insp);
+    });
+    card.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openInspModal(card.dataset.insp); }
+    });
+  });
+
+  // Fav buttons
+  $$(".fav-btn").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.fav;
+      const nowFav = toggleFav(id);
+      btn.classList.toggle("active", nowFav);
+      btn.querySelector("svg").setAttribute("fill", nowFav ? "currentColor" : "none");
+      if(currentRoute === "/favoritos") router();
+    });
+  });
+}
+
+function openInspModal(id){
+  const item = inspirations.find(i => i.id === id);
+  if(!item) return;
+  const fav = isFav(item.id);
+  const cat = getCatById(item.cat);
+  const modal = $("#modalContent");
+  modal.innerHTML = `
+    <button class="modal-close" id="modalClose" aria-label="Fechar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <img class="modal-img" src="${item.img}" alt="${item.title}" />
+    <div class="modal-body">
+      <span class="eyebrow">${cat ? cat.name : item.cat}</span>
+      <h2 class="mt-16">${item.title}</h2>
+      <p>${item.desc}</p>
+      <div class="modal-tags">
+        ${item.tags.map(t => `<span>${t}</span>`).join("")}
+      </div>
+      <div class="modal-actions">
+        <button class="btn ${fav?'btn-dark':'btn-primary'}" id="modalFav">
+          ${fav ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+        </button>
+        <a class="btn btn-ghost" href="#/lista/${affiliateLists.find(a => a.category === item.cat)?.id || 'minhas-recomendacoes'}" id="modalCTA">
+          Ver produtos relacionados
+        </a>
+      </div>
+    </div>
+  `;
+  const backdrop = $("#modalBackdrop");
+  backdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  const close = () => {
+    backdrop.classList.remove("open");
+    document.body.style.overflow = "";
+  };
+
+  $("#modalClose").addEventListener("click", close);
+  backdrop.addEventListener("click", (e) => { if(e.target === backdrop) close(); });
+  document.addEventListener("keydown", function esc(e){
+    if(e.key === "Escape"){ close(); document.removeEventListener("keydown", esc); }
+  });
+  $("#modalFav").addEventListener("click", () => {
+    const nowFav = toggleFav(item.id);
+    $("#modalFav").textContent = nowFav ? "Remover dos favoritos" : "Salvar nos favoritos";
+    $("#modalFav").className = "btn " + (nowFav ? "btn-dark" : "btn-primary");
+    // rebind parent card state
+    const cardBtn = document.querySelector(`.fav-btn[data-fav="${item.id}"]`);
+    if(cardBtn){
+      cardBtn.classList.toggle("active", nowFav);
+      cardBtn.querySelector("svg").setAttribute("fill", nowFav ? "currentColor" : "none");
+    }
+  });
+  $("#modalCTA").addEventListener("click", close);
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+function performSearch(term){
+  const q = normalize(term.trim());
+  if(!q) return { inspirations: [], brands: [], lists: [] };
+  return {
+    inspirations: inspirations.filter(i => normalize(i.title + " " + i.tags.join(" ") + " " + i.desc).includes(q)),
+    brands: brands.filter(b => normalize(b.name).includes(q)),
+    lists: affiliateLists.filter(l => normalize(l.title + " " + l.description).includes(q))
+  };
+}
+
+function renderSearchResults(term){
+  const box = $("#searchResults");
+  const res = performSearch(term);
+  const total = res.inspirations.length + res.brands.length + res.lists.length;
+
+  if(!term.trim()){
+    box.classList.remove("open");
+    box.innerHTML = "";
+    return;
+  }
+
+  let html = "";
+  if(!total){
+    html = `<div class="search-empty">Nenhum resultado para "<b>${term}</b>".</div>`;
+  } else {
+    if(res.inspirations.length){
+      html += `<div class="search-group-title">Inspirações</div>`;
+      html += res.inspirations.slice(0,6).map(i => `
+        <button class="search-result" data-goto-insp="${i.id}">
+          <img src="${i.img}" alt="" />
+          <div><div class="sr-title">${i.title}</div><div class="sr-sub">${i.tags.slice(0,2).join(" · ")}</div></div>
+        </button>
+      `).join("");
+    }
+    if(res.brands.length){
+      html += `<div class="search-group-title">Marcas</div>`;
+      html += res.brands.slice(0,4).map(b => `
+        <a class="search-result" href="${b.route}" data-search-link>
+          <div style="width:38px;height:38px;border-radius:8px;background:var(--beige);display:grid;place-items:center;font-family:var(--font-serif);font-weight:600;color:var(--brown);flex-shrink:0;">${b.name[0]}</div>
+          <div><div class="sr-title">${b.name}</div><div class="sr-sub">Marca</div></div>
+        </a>
+      `).join("");
+    }
+    if(res.lists.length){
+      html += `<div class="search-group-title">Listas</div>`;
+      html += res.lists.slice(0,4).map(l => `
+        <a class="search-result" href="#/lista/${l.id}" data-search-link>
+          <img src="${l.image}" alt="" />
+          <div><div class="sr-title">${l.title}</div><div class="sr-sub">Lista de produtos</div></div>
+        </a>
+      `).join("");
+    }
+  }
+  box.innerHTML = html;
+  box.classList.add("open");
+
+  box.querySelectorAll("[data-goto-insp]").forEach(b => {
+    b.addEventListener("click", () => {
+      openInspModal(b.dataset.gotoInsp);
+      closeSearch();
+    });
+  });
+  box.querySelectorAll("[data-search-link]").forEach(a => {
+    a.addEventListener("click", () => closeSearch());
+  });
+}
+
+function closeSearch(){
+  $("#searchResults").classList.remove("open");
+  const inp = $("#searchInput");
+  if(inp) inp.value = "";
+  $("#searchClear").classList.remove("show");
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+function init(){
+  window.addEventListener("hashchange", router);
+  if(!location.hash) location.hash = "#/";
+  router();
+  updateFavBadge();
+
+  // Search
+  const searchInput = $("#searchInput");
+  const searchClear = $("#searchClear");
+  searchInput.addEventListener("input", (e) => {
+    const v = e.target.value;
+    searchClear.classList.toggle("show", v.length > 0);
+    renderSearchResults(v);
+  });
+  searchInput.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") closeSearch();
+  });
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    searchClear.classList.remove("show");
+    closeSearch();
+    searchInput.focus();
+  });
+  document.addEventListener("click", (e) => {
+    if(!e.target.closest(".search-wrap") && !e.target.closest("#searchResults") && !e.target.closest("#mobileSearchBtn")){
+      if($("#searchResults").classList.contains("open")) closeSearch();
+    }
+  });
+
+  // Mobile search button
+  const mobileSearchBtn = $("#mobileSearchBtn");
+  if(mobileSearchBtn){
+    mobileSearchBtn.addEventListener("click", () => {
+      const inp = $("#searchInput");
+      inp.focus();
+      inp.scrollIntoView({behavior:"smooth", block:"center"});
+    });
+  }
+
+  // More sheet
+  const moreBtn = $("#moreBtn");
+  const sheet = $("#moreSheet");
+  const sheetBackdrop = $("#sheetBackdrop");
+  const closeSheet = () => {
+    sheet.classList.remove("open");
+    sheetBackdrop.classList.remove("open");
+    document.body.style.overflow = "";
+  };
+  moreBtn.addEventListener("click", () => {
+    sheet.classList.add("open");
+    sheetBackdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+  });
+  sheetBackdrop.addEventListener("click", closeSheet);
+  sheet.querySelectorAll("a").forEach(a => a.addEventListener("click", closeSheet));
+  document.addEventListener("keydown", (e) => { if(e.key === "Escape") closeSheet(); });
+
+  // Bottom nav clicks (also triggers router via hash)
+  $$(".bottom-nav button[data-route]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      location.hash = btn.dataset.route;
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
